@@ -258,19 +258,13 @@ function _git_prompt_long_sha
   test $SHA; and echo -n -s (_col brcyan)\[(_col brgrey)$SHA(_col brcyan)\](_col_res)
 end
 
-function _node_version -d "Get the currently used node version if NVM is installed by homebrew"
+function _node_version -d "Get the currently used node version if NVM exists"
   set -l node_version
-  if test -f (brew --prefix nvm)/nvm.sh
-    set node_version (string trim -l -c=v (node -v 2>/dev/null)) # trimmed lef 'v'; can use 'nvm current', but slower
-  else
-    if which nvm  >/dev/null ^&1
-      set node_version (string trim -l -c=v (node -v 2>/dev/null)) # trimmed lef 'v'; can use 'nvm current', but slower
-    end
-  end
+  available nvm; and set node_version (string trim -l -c=v (node -v 2>/dev/null)) # trimmed lef 'v'; can use 'nvm current', but slower
   test $node_version; and echo -n -s (_col brgreen)$ICON_NODE(_col green)$node_version(_col_res)
 end
 
-function _ruby_version -d "Get RVM or rbenv version and output"  #^&1 redirects stderr to stdout, '>' stdout, '2>' stderr
+function _ruby_version -d "Get RVM or rbenv version and output" #^&1 stderr2stdout, >&2 vice versa, '>' stdout, '2>' stderr
   set -l ruby_ver
   if which rvm-prompt >/dev/null ^&1
     set ruby_ver (rvm-prompt i v g)
@@ -279,19 +273,23 @@ function _ruby_version -d "Get RVM or rbenv version and output"  #^&1 redirects 
       set ruby_ver (rbenv version-name)
     end
   end
-  if test -n (_ruby_gemset 2>/dev/null; or echo "")
-    test $ruby_ver; and echo -n -s (_col brred)$ICON_RUBY(_col green)$ruby_ver(_col grey)"@"(_col brgrey)(_ruby_gemset)(_col_res)
+  if test -n (_rbenv_gemset 2>/dev/null; or echo "")
+    test $ruby_ver; and echo -n -s (_col brred)$ICON_RUBY(_col green)$ruby_ver(_col grey)"@"(_col brgrey)(_rbenv_gemset)(_col_res)
   else
     test $ruby_ver; and echo -n -s (_col brred)$ICON_RUBY(_col green)$ruby_ver(_col_res)
   end
 end
 
-function _ruby_gemset -d "Get main current gemset name"
-  if test (rbenv gemset active 2>/dev/null)        #redirects stderr to /null
-    set -l active_gemset (string split -m1 " " (rbenv gemset active))
-    echo -n -s $active_gemset[1]
+function _rbenv_gemset -d "Get main current gemset name"
+  if available rbenv
+    if test (rbenv gemset active 2>/dev/null)                           #redirects stderr to /null
+      set -l active_gemset (string split -m1 " " (rbenv gemset active))
+      echo -n -s $active_gemset[1]
+    else
+      echo ''
+    end
   else
-    echo
+    echo ''
   end
 end
 
