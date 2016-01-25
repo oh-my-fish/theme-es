@@ -26,12 +26,12 @@ $ omf install es
 
 ###__Git folder__
 <p align="center">
-<img src="https://github.com/eugenesvk/Settings-Fish/blob/master/Assets/Fish%20Prompt%20Git-es.png?raw=true">
+<img src="https://github.com/oh-my-fish/theme-es/blob/master/Fish%20Prompt%20Git-es.png?raw=true">
 </p>
 
 ###__Normal folder (no Git)__
 <p align="center">
-<img src="https://github.com/eugenesvk/Settings-Fish/blob/master/Assets/Fish%20Prompt%20NoGit-es.png?raw=true">
+<img src="https://github.com/oh-my-fish/theme-es/blob/master/Fish%20Prompt%20NoGit-es.png?raw=true">
 </p>
 
 # License
