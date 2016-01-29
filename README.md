@@ -34,6 +34,11 @@ $ omf install es
 <img src="https://github.com/oh-my-fish/theme-es/blob/master/Fish%20Prompt%20NoGit-es.png?raw=true">
 </p>
 
+###__Normal read-only folder (no Git)__
+<p align="left">
+<img src="https://github.com/oh-my-fish/theme-es/blob/master/Fish%20Prompt%20NoGit%20Read-only-es.png?raw=true" width="280">
+</p>
+
 # License
 
 [MIT][mit] © [eugenesvk][author]
