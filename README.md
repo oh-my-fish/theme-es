@@ -22,7 +22,7 @@ $ omf install es
 * Git-aware theme with detailed __Git status__ in the left prompt (added, removed, modified, renamed, unstaged, stashed)
 * __Node/Python/Ruby@gemset__ current version inside a git folder in the right prompt if respective virtual environment manager is installed (nvm, pyenv, rbenv)
 * __Error status__ and __duration of last command__ in the right prompt
-* Mac-notifications on completion of long commands (10+&nbsp;seconds by default) if terminal is out of focus
+* Mac-notifications on completion of long commands (10+&nbsp;seconds by default) if terminal (iTerm and Terminal) is out of focus
 * Limits path to __two last folders__ for better visibility, with `$HOME` directory abbreviated to `~`
 
 ## Screenshot

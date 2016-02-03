@@ -75,15 +75,18 @@ function _cmd_duration -d 'Displays the elapsed time of last command and show no
       test $CMD_DURATION -gt $notify_duration
       and echo $history[1] | grep -vqE "^($exclude_cmd).*"
     end
-    # Only show the notification if iTerm is not focused
-    echo "
-      tell application \"System Events\"
-          set activeApp to name of first application process whose frontmost is true
-          if \"iTerm\" is not in activeApp then
-              display notification \"Finished in $duration\" with title \"$history[1]\"
-          end if
-      end tell
-      " | osascript
+    set -l osname (uname)
+    if test $osname = Darwin          # only show notification in OS X
+      #Only show the notification if iTerm and Terminal are not focused
+      echo "
+        tell application \"System Events\"
+            set activeApp to name of first application process whose frontmost is true
+            if \"iTerm\" is not in activeApp and \"Terminal\" is not in activeApp then
+                display notification \"Finished in $duration\" with title \"$history[1]\"
+            end if
+        end tell
+        " | osascript
+    end
     end
   end
 end
