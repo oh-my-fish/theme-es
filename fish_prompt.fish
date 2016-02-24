@@ -91,11 +91,6 @@ function _cmd_duration -d 'Displays the elapsed time of last command and show no
   end
 end
 
-function available -a name -d "Check if a function or program is available."
-  #-a NAMES assigns the value of successive command-line arguments to the names given in NAMES
-  type "$name" ^/dev/null >&2
-end
-
 function _col                                     #Set Color 'name b u' bold, underline
   set -l col; set -l bold; set -l under
   if [ -n "$argv[1]" ];       set col   $argv[1]; end
@@ -263,7 +258,7 @@ end
 
 function _node_version -d "Get the currently used node version if NVM exists"
   set -l node_version
-  available nvm; and set node_version (string trim -l -c=v (node -v 2>/dev/null)) # trimmed lef 'v'; can use 'nvm current', but slower
+  type -q nvm; and set node_version (string trim -l -c=v (node -v 2>/dev/null)) # trimmed lef 'v'; can use 'nvm current', but slower
   test $node_version; and echo -n -s (_col brgreen)$ICON_NODE(_col green)$node_version(_col_res)
 end
 
@@ -284,7 +279,7 @@ function _ruby_version -d "Get RVM or rbenv version and output" #^&1 stderr2stdo
 end
 
 function _rbenv_gemset -d "Get main current gemset name"
-  if available rbenv
+  if type -q rbenv
     if test (rbenv gemset active 2>/dev/null)                           #redirects stderr to /null
       set -l active_gemset (string split -m1 " " (rbenv gemset active))
       echo -n -s $active_gemset[1]
