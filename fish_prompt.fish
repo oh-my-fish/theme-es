@@ -12,10 +12,10 @@ function fish_prompt
   _icons_initialize
   set -l p_path2 (_col brblue o u)(prompt_pwd2)(_col_res)            #path shortened to last two folders ($count)
   set -l symbols ''                                                  #add some pre-path symbols
-  if [ $symbols_style = 'symbols' ]
-    if [ ! -w . ];    set symbols $symbols(_col ff6600);           end
-    if set -q -x VIM; set symbols $symbols(_col 3300ff o)$ICON_VIM; end
-  end
+  #if [ $symbols_style = 'symbols' ]
+  #  if [ ! -w . ];    set symbols $symbols(_col ff6600);           end
+  #  if set -q -x VIM; set symbols $symbols(_col 3300ff o)$ICON_VIM; end
+  #end
   if [ (_is_git_dirty) ]; set dirty ''; else; set dirty ' '; end     #add space only in clean git branches
   if test $last_status = 0                                           #prompt symbol green normal, red on error
     set prompt (_col green b)"$dirty"(_UserSymbol)(_col_res)' '
@@ -30,21 +30,21 @@ end
 
 function fish_right_prompt
   if test $last_status -gt 0                                         #set error code in red
-    set errorp (_col brred)"$last_status⏎"(_col_res)" "
+    set errorp (_col brred)"$last_status ⏎"(_col_res)" "
   end
   set -l duration (_cmd_duration)                                    #set duration of last command
   if [ (jobs -l | wc -l) -gt 0 ]                                     #set ⚙ if any background jobs exit
     set jobsp $ICON_JOBS
   end
   echo -n -s "$errorp$duration$jobsp"                                #show error code, command duration and jobs status
-  if _is_git_folder                                                  #show  only if in a git folder
+  #if _is_git_folder                                                  #show  only if in a git folder
   #command git rev-parse --is-inside-work-tree 1>/dev/null 2>/dev/null
     set git_sha (_git_prompt_short_sha)                              #git short sha
     set NODEp   (_node_version)                                      #Node.js version
     set PYTHONp (_python_version)                                    #Python version
     set RUBYp   (_ruby_version)                                      #Ruby prompt @ gemset
     echo -n -s "$git_sha$NODEp$PYTHONp$RUBYp"                        # -n no newline -s no space separation
-  end
+  #end
   echo -n -s (_prompt_user)                                          #display user@host if different from default or SSH
 end
 
@@ -155,9 +155,9 @@ end
 
 function _UserSymbol                                                #prompt symbol: '#' superuser or '>' user
   if test (id -u $USER) -eq 0
-    echo "#"
+    echo " #"
   else
-    echo ">"
+    echo " ><>"
   end
 end
 
@@ -182,7 +182,7 @@ function _git_status -d 'Check git status'
     echo -n (_col red)$ICON_VCS_DELETED
   end
   if [ (echo -sn $git_status\n | egrep -c ".[MT]") -gt 0 ]                      #modified
-    echo -n (_col $ORANGE)$ICON_VCS_MODIFIED
+    echo -n (_col $ORANGE)$ICON_VCS_MODIFIED 
   end
   if [ (echo -sn $git_status\n | egrep -c "R.") -gt 0 ]                         #renamed
     echo -n (_col purple)$ICON_VCS_RENAME
@@ -307,39 +307,38 @@ end
 function _icons_initialize
   #echo \Uf00a \ue709 \ue791 \ue739 \uF0DD \UF020 \UF01F \UF07B \UF015 \UF00C \UF00B \UF06B \UF06C \UF06E \UF091 \UF02C \UF026 \UF06D \UF0CF \UF03A \UF03D \UF081 \UF02A \UE606 \UE73C      #\UF005 bugs in fish
   set -g ORANGE                     FF8C00        #FF8C00 dark orange, FFA500 orange, another one fa0 o
-  set -g ICON_NODE                  \UE718" "     #  from Devicons or ⬢
-  set -g ICON_RUBY                  \UE791" "     # \UE791 from Devicons; \UF047; \UE739; 💎
-  set -g ICON_PYTHON                \UE606" "     # \UE606; \UE73C
-  #set -g ICON_PERL                  \UE606" "     # \UE606; \UE73C
-  set -g ICON_TEST                  \UF091        # 
-  set -g ICON_VCS_UNTRACKED         \UF02C" "     #    #●: there are untracked (new) files
-  set -g ICON_VCS_UNMERGED          \UF026" "     #    #═: there are unmerged commits
-  set -g ICON_VCS_MODIFIED          \UF06D" "     # 
-  set -g ICON_VCS_STAGED            \UF06B" "     #  (added) →
-  set -g ICON_VCS_DELETED           \UF06C" "     # 
-  set -g ICON_VCS_DIFF              \UF06B" "     # 
-  set -g ICON_VCS_RENAME            \UF06E" "     # 
-  set -g ICON_VCS_STASH             \UF0CF" "     #      #✭: there are stashed commits
-  set -g ICON_VCS_INCOMING_CHANGES  \UF00B" "     #  or \UE1EB or \UE131
-  set -g ICON_VCS_OUTGOING_CHANGES  \UF00C" "     #  or \UE1EC or 
-  set -g ICON_VCS_TAG               \UF015" "     # 
-  set -g ICON_VCS_BOOKMARK          \UF07B" "     # 
-  set -g ICON_VCS_COMMIT            \UF01F" "     # 
-  set -g ICON_VCS_BRANCH            \UE0A0        # \UE0A0 or \UF020
-  set -g ICON_VCS_REMOTE_BRANCH     \UE804" "     #  not displayed, should be branch icon on a book
-  set -g ICON_VCS_DETACHED_BRANCH   \U27A6" "     # ➦
-  set -g ICON_VCS_GIT               \UF00A" "     #  from Octicons
-  set -g ICON_VCS_HG                \F0DD" "      # Got cut off from Octicons on patching
-  set -g ICON_VCS_CLEAN             \UF03A        # 
-  set -g ICON_VCS_PUSH              printf "\UF005 " # bugs out in fish: \UF005 (printf "\UF005")
-  set -g ICON_VCS_DIRTY             ±             #
-  set -g ICON_ARROW_UP              \UF03D""      #  ↑
-  set -g ICON_ARROW_DOWN            \UF03F""      #  ↓
-  set -g ICON_OK                    \UF03A        # 
-  set -g ICON_FAIL                  \UF081        # 
-  set -g ICON_STAR                  \UF02A        # 
-  set -g ICON_JOBS                  \U2699" "     # ⚙
-  set -g ICON_VIM                   \UE7C5" "     # 
+  set -g ICON_NODE                  " "N" "     #  from Devicons or ⬢
+  set -g ICON_RUBY                  " "R" "     # \UE791 from Devicons; \UF047; \UE739; 💎
+  set -g ICON_PYTHON                " "P" "     # \UE606; \UE73C
+  set -g ICON_TEST                  " "\UF091        # 
+  set -g ICON_VCS_UNTRACKED         " "U     #    #●: there are untracked (new) files
+  set -g ICON_VCS_UNMERGED          " "U     #    #═: there are unmerged commits
+  set -g ICON_VCS_MODIFIED          " "M     # 
+  set -g ICON_VCS_STAGED            " "S     #  (added) →
+  set -g ICON_VCS_DELETED           " "D     # 
+  set -g ICON_VCS_DIFF              " "D     # 
+  set -g ICON_VCS_RENAME            " "R     # 
+  set -g ICON_VCS_STASH             " "S     #      #✭: there are stashed commits
+  set -g ICON_VCS_INCOMING_CHANGES  " "I     #  or \UE1EB or \UE131
+  set -g ICON_VCS_OUTGOING_CHANGES  " "O     #  or \UE1EC or 
+  set -g ICON_VCS_TAG               " "T     # 
+  set -g ICON_VCS_BOOKMARK          " "B     # 
+  set -g ICON_VCS_COMMIT            " "C     # 
+  set -g ICON_VCS_BRANCH            " "B" "        # \UE0A0 or \UF020
+  set -g ICON_VCS_REMOTE_BRANCH     " "R     #  not displayed, should be branch icon on a book
+  set -g ICON_VCS_DETACHED_BRANCH   " "D     # ➦
+  set -g ICON_VCS_GIT               " "\UF00A" "     #  from Octicons
+  set -g ICON_VCS_HG                " "\F0DD" "      # Got cut off from Octicons on patching
+  set -g ICON_VCS_CLEAN             " "\UF03A" "        # 
+  set -g ICON_VCS_PUSH              " "☝	 # bugs out in fish: \UF005 (printf "\UF005")
+  set -g ICON_VCS_DIRTY             " "±             #
+  set -g ICON_ARROW_UP              " "↑      #  ↑
+  set -g ICON_ARROW_DOWN            " "↓      #  ↓
+  set -g ICON_OK                    " "☑        # 
+  set -g ICON_FAIL                  " "☒        # 
+  set -g ICON_STAR                  " "★        # 
+  set -g ICON_JOBS                  " "✇    # ⚙
+  set -g ICON_VIM                   " "✎     # 
 end
 
 set -g CMD_DURATION 0
