@@ -13,7 +13,7 @@ function fish_prompt
   set -l p_path2 (_col brblue o u)(prompt_pwd2)(_col_res)            #path shortened to last two folders ($count)
   set -l symbols ''                                                  #add some pre-path symbols
   if [ $symbols_style = 'symbols' ]
-    if [ ! -w . ];    set symbols $symbols(_col ff6600);           end
+    if [ ! -w . ];    set symbols $symbols(_col ff6600)" ";           end
     if set -q -x VIM; set symbols $symbols(_col 3300ff o)$ICON_VIM; end
   end
   if [ (_is_git_dirty) ]; set dirty ''; else; set dirty ' '; end     #add space only in clean git branches
@@ -212,10 +212,10 @@ function _git_branch -d "Display the current git state"
     set ref (command git symbolic-ref HEAD 2>/dev/null)
     if [ $status -gt 0 ]
       set -l branch (command git show-ref --head -s --abbrev |head -n1 2>/dev/null)
-      set ref " $ICON_VCS_DETACHED_BRANCH$branch"
+      set ref " $ICON_VCS_DETACHED_BRANCH $branch "
     end
     set -l branch (echo $ref | sed  "s-refs/heads/--")
-    echo " $ICON_VCS_BRANCH"(_col magenta)"$branch"(_col_res)
+    echo " $ICON_VCS_BRANCH "(_col magenta)"$branch "(_col_res)
   end
 end
 function _is_git_folder     -d "Check if current folder is a git folder"
@@ -240,11 +240,11 @@ function _git_ahead_verbose -d 'Print a more verbose ahead/behind state for the 
     case '0 0'  # equal to upstream
       return
     case '* 0'  # ahead of upstream
-      echo (_col blue)"$ICON_ARROW_UP$ahead"
+      echo (_col blue)"$ICON_ARROW_UP$ahead "
     case '0 *'  # behind upstream
-      echo (_col red)"$ICON_ARROW_DOWN$behind"
+      echo (_col red)"$ICON_ARROW_DOWN$behind "
     case '*'    # diverged from upstream
-      echo (_col blue)"$ICON_ARROW_UP$ahead"(_col red)"$ICON_ARROW_DOWN$behind"
+      echo (_col blue)"$ICON_ARROW_UP$ahead "(_col red)"$ICON_ARROW_DOWN$behind "
   end
 end
 function _git_prompt_short_sha
@@ -305,34 +305,34 @@ function _icons_initialize
   set -g ICON_NODE                  \UE718" "     #  from Devicons or ⬢
   set -g ICON_RUBY                  \UE791" "     # \UE791 from Devicons; \UF047; \UE739; 💎
   set -g ICON_PYTHON                \UE606" "     # \UE606; \UE73C
-  #set -g ICON_PERL                  \UE606" "     # \UE606; \UE73C
+  set -g ICON_PERL                  \UE769" "     # 
   set -g ICON_TEST                  \UF091        # 
-  set -g ICON_VCS_UNTRACKED         \UF02C" "     #    #●: there are untracked (new) files
-  set -g ICON_VCS_UNMERGED          \UF026" "     #    #═: there are unmerged commits
-  set -g ICON_VCS_MODIFIED          \UF06D" "     # 
-  set -g ICON_VCS_STAGED            \UF06B" "     #  (added) →
-  set -g ICON_VCS_DELETED           \UF06C" "     # 
-  set -g ICON_VCS_DIFF              \UF06B" "     # 
-  set -g ICON_VCS_RENAME            \UF06E" "     # 
-  set -g ICON_VCS_STASH             \UF0CF" "     #      #✭: there are stashed commits
-  set -g ICON_VCS_INCOMING_CHANGES  \UF00B" "     #  or \UE1EB or \UE131
-  set -g ICON_VCS_OUTGOING_CHANGES  \UF00C" "     #  or \UE1EC or 
-  set -g ICON_VCS_TAG               \UF015" "     # 
-  set -g ICON_VCS_BOOKMARK          \UF07B" "     # 
-  set -g ICON_VCS_COMMIT            \UF01F" "     # 
-  set -g ICON_VCS_BRANCH            \UE0A0        # \UE0A0 or \UF020
+  set -g ICON_VCS_UNTRACKED         \UF420" "     #  there are untracked (new) files
+  set -g ICON_VCS_UNMERGED          \UFA59" "     # 繁there are unmerged commits
+  set -g ICON_VCS_MODIFIED          \UF459" "     # 
+  set -g ICON_VCS_STAGED            \UF457" "     # 
+  set -g ICON_VCS_DELETED           \UF458" "     # 
+  set -g ICON_VCS_DIFF              \UF440" "     # 
+  set -g ICON_VCS_RENAME            \UF45A" "     # 
+  set -g ICON_VCS_STASH             \UF0CF" "     # ✭ there are stashed commits
+  set -g ICON_VCS_INCOMING_CHANGES  \UF409" "     # 
+  set -g ICON_VCS_OUTGOING_CHANGES  \UF40A" "     # 
+  set -g ICON_VCS_TAG               \UF412" "     # 
+  set -g ICON_VCS_BOOKMARK          \UF461" "     # 
+  set -g ICON_VCS_COMMIT            \UF417" "     # 
+  set -g ICON_VCS_BRANCH            \UF418        # 
   set -g ICON_VCS_REMOTE_BRANCH     \UE804" "     #  not displayed, should be branch icon on a book
   set -g ICON_VCS_DETACHED_BRANCH   \U27A6" "     # ➦
-  set -g ICON_VCS_GIT               \UF00A" "     #  from Octicons
-  set -g ICON_VCS_HG                \F0DD" "      # Got cut off from Octicons on patching
-  set -g ICON_VCS_CLEAN             \UF03A        # 
-  set -g ICON_VCS_PUSH              printf "\UF005 " # bugs out in fish: \UF005 (printf "\UF005")
+  set -g ICON_VCS_GIT               \UF7A1" "     #  from Octicons
+  set -g ICON_VCS_HG                \F0DD" "      #   Got cut off from Octicons on patching
+  set -g ICON_VCS_CLEAN             \UF42E        # 
+  set -g ICON_VCS_PUSH              \UF403        # 
   set -g ICON_VCS_DIRTY             ±             #
-  set -g ICON_ARROW_UP              \UF03D""      #  ↑
-  set -g ICON_ARROW_DOWN            \UF03F""      #  ↓
-  set -g ICON_OK                    \UF03A        # 
-  set -g ICON_FAIL                  \UF081        # 
-  set -g ICON_STAR                  \UF02A        # 
+  set -g ICON_ARROW_UP              \UF431""      # 
+  set -g ICON_ARROW_DOWN            \UF433""      # 
+  set -g ICON_OK                    \UF42E        # 
+  set -g ICON_FAIL                  \UF467        # 
+  set -g ICON_STAR                  \UF41E        # 
   set -g ICON_JOBS                  \U2699" "     # ⚙
   set -g ICON_VIM                   \UE7C5" "     # 
 end
