@@ -15,7 +15,7 @@ $ omf install es
 
 ## Requirements
 * Latest fish version with a builtin `string` function (above `2.2.0`, so please get the latest version from  `HEAD`)
-* Powerline-patched font
+* [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts)
 
 ## Features
 
