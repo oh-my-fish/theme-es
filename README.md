@@ -3,7 +3,9 @@
 #### es theme
 > A Powerline-style, Git-aware theme for [Oh My Fish][omf-link].
 
-[![MIT License](https://img.shields.io/badge/license-MIT-007EC7.svg?style=flat-square)](/LICENSE) [![Fish Shell Version](https://img.shields.io/badge/fish-v2.2.0-007EC7.svg?style=flat-square)](http://fishshell.com) [![Oh My Fish Framework](https://img.shields.io/badge/Oh%20My%20Fish-Framework-007EC7.svg?style=flat-square)](https://www.github.com/oh-my-fish/oh-my-fish)
+[![MIT License][license-badge]](/LICENSE)
+[![Fish Shell Version][fish-version-badge]](https://fishshell.com)
+[![Oh My Fish Framework][omf-badge]](https://www.github.com/oh-my-fish/oh-my-fish)
 
 <br/>
 
@@ -14,7 +16,6 @@ $ omf install es
 ```
 
 ## Requirements
-* Latest fish version with a builtin `string` function (above `2.2.0`, so please get the latest version from  `HEAD`)
 * Powerline-patched font
 
 ## Features
@@ -25,7 +26,7 @@ $ omf install es
 * Mac-notifications on completion of long commands (10+&nbsp;seconds by default) if terminal (iTerm and Terminal) is out of focus
 * Limits path to __two last folders__ for better visibility, with `$HOME` directory abbreviated to `~`
 
-## Screenshot
+## Screenshots
 
 ### __Git folder__
 <p align="center">
@@ -42,13 +43,14 @@ $ omf install es
 <img src="https://github.com/oh-my-fish/theme-es/blob/master/Fish%20Prompt%20NoGit%20Read-only-es.png?raw=true" width="280">
 </p>
 
-# License
+## License
 
-[MIT][mit] © [eugenesvk][author]
+[MIT][mit] © [eugenesvk][author] et [al][contributors]
 
-
-[mit]:            http://opensource.org/licenses/MIT
-[author]:         http://github.com/eugenesvk
-[omf-link]:       https://www.github.com/oh-my-fish/oh-my-fish
-
-[license-badge]:  https://img.shields.io/badge/license-MIT-007EC7.svg?style=flat-square
+[mit]:               	https://opensource.org/licenses/MIT
+[author]:            	https://github.com/eugenesvk
+[contributors]:      	https://github.com/oh-my-fish/theme-es/graphs/contributors
+[omf-link]:          	https://www.github.com/oh-my-fish/oh-my-fish
+[license-badge]:     	https://img.shields.io/badge/license-MIT-007EC7.svg?style=flat-square
+[fish-version-badge]:	https://img.shields.io/badge/fish-v3.0.0-007EC7.svg?style=flat-square
+[omf-badge]:         	https://img.shields.io/badge/Oh%20My%20Fish-Framework-007EC7.svg?style=flat-square
