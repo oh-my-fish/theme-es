@@ -96,7 +96,7 @@ function _col -d "Set Color, 'name b u' bold, underline"
   if [ (count $argv) -gt 2 ]; set under "-"$argv[3]; end
   set_color $bold $under $argv[1]
 end
-function _col_res -d "Rest background and foreground colors"
+function _col_res -d "Reset background and foreground colors"
   set_color -b normal
   set_color normal
 end
