@@ -70,11 +70,11 @@ function _cmd_duration -d 'Displays the elapsed time of last command and show no
     set notify_duration 10000
     set exclude_cmd "bash|less|man|more|ssh"
     if begin
-      test $CMD_DURATION -gt $notify_duration
+      test "$CMD_DURATION" -gt "$notify_duration"
       and echo $history[1] | grep -vqE "^($exclude_cmd).*"
     end
     set -l osname (uname)
-    if test $osname = Darwin                    # only show notification in macOS
+    if test "$osname" = "Darwin"                  # only show notification in macOS
       #Only show the notification if iTerm and Terminal are not focused
       echo "
         tell application \"System Events\"
@@ -237,18 +237,18 @@ function _git_ahead_verbose -d 'Print a more verbose ahead/behind state for the 
   end
 end
 function _git_prompt_short_sha
-  test $SHA; and echo -n -s (_col brcyan)\[(_col brgrey)$SHA(_col brcyan)\](_col_res)
   set -l SHA (command git rev-parse --short HEAD 2>/dev/null)
+  test -n "$SHA"; and echo -n -s (_col brcyan)\[(_col brgrey)$SHA(_col brcyan)\](_col_res)
 end
 function _git_prompt_long_sha
-  test $SHA; and echo -n -s (_col brcyan)\[(_col brgrey)$SHA(_col brcyan)\](_col_res)
   set -l SHA (command git rev-parse HEAD 2>/dev/null)
+  test -n "$SHA"; and echo -n -s (_col brcyan)\[(_col brgrey)$SHA(_col brcyan)\](_col_res)
 end
 
 function _node_version -d "Get the currently used node version if NVM exists"
   set -l node_version
   type -q nvm; and set node_version (string trim -l -c=v (node -v 2>/dev/null)) # trim left 'v' in 'v16.0.0'
-  test $node_version; and echo -n -s (_col brgreen)$ICON_NODE(_col green)$node_version(_col_res)
+  test -n "$node_version"; and echo -n -s (_col brgreen)$ICON_NODE(_col green)$node_version(_col_res)
 end
 
 function _ruby_version -d "Get RVM or rbenv version and output"
@@ -261,9 +261,9 @@ function _ruby_version -d "Get RVM or rbenv version and output"
     end
   end
   if test -n (_rbenv_gemset 2>/dev/null; or echo "")
-    test $ruby_ver; and echo -n -s (_col brred)$ICON_RUBY(_col green)$ruby_ver(_col grey)"@"(_col brgrey)(_rbenv_gemset)(_col_res)
+    test -n "$ruby_ver"; and echo -n -s (_col brred)$ICON_RUBY(_col green)$ruby_ver(_col grey)"@"(_col brgrey)(_rbenv_gemset)(_col_res)
   else
-    test $ruby_ver; and echo -n -s (_col brred)$ICON_RUBY(_col green)$ruby_ver(_col_res)
+    test -n "$ruby_ver"; and echo -n -s (_col brred)$ICON_RUBY(_col green)$ruby_ver(_col_res)
   end
 end
 
@@ -285,7 +285,7 @@ function _python_version -d "Get python version if pyenv is installed"
   if which pyenv >/dev/null 2>&1
     set python_version (pyenv version-name)
   end
-  test $python_version; and echo -n -s (_col brblue)$ICON_PYTHON(_col green)$python_version(_col_res)
+  test -n "$python_version"; and echo -n -s (_col brblue)$ICON_PYTHON(_col green)$python_version(_col_res)
 end
 
 function _icons_initialize
