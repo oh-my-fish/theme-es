@@ -4,6 +4,16 @@ set -g theme_display_git_ahead_verbose  yes
 set -g theme_hide_hostname              no
 set -g theme_display_user               no
 
+# Other global variables
+if test -z "$theme_ismacOS"
+  set -g theme_ismacOS 'no'
+  set -l osname (uname)
+  if test "$osname" = 'Darwin'
+    set -g theme_ismacOS 'yes'
+  end
+end
+set -g theme_notify_duration 10000
+
 function fish_prompt
   set -g last_status $status                                         # exit status of last command
   #set -l count (_file_count)
@@ -66,16 +76,12 @@ function _cmd_duration -d 'Displays the elapsed time of last command and show no
     else
       echo -n (_col brgreen)$duration(_col_res)
     end
-    # macOS notification when a command takes longer than notify_duration and iTerm is not focused
-    set notify_duration 10000
+    # Show a system notificaton when...
     set exclude_cmd "bash|less|man|more|ssh"
-    if begin
-      test "$CMD_DURATION" -gt "$notify_duration"
-      and echo $history[1] | grep -vqE "^($exclude_cmd).*"
-    end
-    set -l osname (uname)
-    if test "$osname" = "Darwin"                  # only show notification in macOS
-      #Only show the notification if iTerm and Terminal are not focused
+    if     test "$theme_ismacOS" = 'yes'                    	# 1. on a macOS
+       and test "$CMD_DURATION" -gt "$theme_notify_duration"	# 2. a command duration exceeds a threshold
+       and echo $history[1] | grep -vqE "^($exclude_cmd).*" 	# 3. a command isn't excluded
+      # 4. iTerm and Terminal are not focused
       echo "
         tell application \"System Events\"
             set activeApp to name of first application process whose frontmost is true
@@ -84,7 +90,6 @@ function _cmd_duration -d 'Displays the elapsed time of last command and show no
             end if
         end tell
         " | osascript
-    end
     end
   end
 end
