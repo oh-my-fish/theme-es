@@ -1,28 +1,13 @@
-# Global variables that affect how left and right prompts look like
-set -g symbols_style                   'symbols'
-set -g theme_display_git_ahead_verbose  yes
-set -g theme_hide_hostname              no
-set -g theme_display_user               no
-
-# Other global variables
-if test -z "$theme_ismacOS"
-  set -g theme_ismacOS 'no'
-  set -l osname (uname)
-  if test "$osname" = 'Darwin'
-    set -g theme_ismacOS 'yes'
-  end
-end
-set -g theme_notify_duration 10000
-
 function fish_prompt
   set -g last_status $status                                         # exit status of last command
   #set -l count (_file_count)
   _icons_initialize
+  _set_theme_vars                                                    # set theme vars if not set by user
   set -l p_path2 (_col brblue o u)(prompt_pwd2)(_col_res)            # path shortened to last two folders ($count)
   set -l symbols ''                                                  # add some pre-path symbols
-  if [ $symbols_style = 'symbols' ]
-    if [ ! -w . ];    set symbols $symbols(_col ff6600)$ICON_LOCK;  end
-    if set -q -x VIM; set symbols $symbols(_col 3300ff o)$ICON_VIM; end
+  if [ $theme_show_symbols = 'yes' ]
+    if [ ! -w . ];    set symbols $symbols(_col ff6600)$ICON_LOCK; end    #
+    if set -q -x VIM; set symbols $symbols(_col 3300ff o)$ICON_VIM; end   #
   end
   if [ (_is_git_dirty) ]; set dirty ''; else; set dirty ' '; end     # add space only in clean git branches
   if test "$last_status" = 0                                         # prompt symbol: green normal, red on error
@@ -54,6 +39,23 @@ function fish_right_prompt
     echo -n -s "$git_sha$NODEp$PYTHONp$RUBYp"     # -n no newline -s no space separation
   end
   echo -n -s (_prompt_user)                       # display user@host if different from default or SSH
+function _set_theme_vars -d 'Set default values to theme variables unless already set in user config'
+  # Global variables that affect how left and right prompts look like
+  test -z "$theme_show_symbols"     	; and set -g theme_show_symbols     	'yes'  	# [yes] no
+  test -z "$theme_verbose_git_ahead"	; and set -g theme_verbose_git_ahead	'yes'  	# [yes] no
+  test -z "$theme_git_sha"          	; and set -g theme_git_sha          	'short'	# [short] long no
+  test -z "$theme_show_user"        	; and set -g theme_show_user        	'no'   	# [no] yes
+  test -z "$theme_show_hostname"    	; and set -g theme_show_hostname    	'yes'  	# [yes] no
+
+  # Other global variables
+  if test -z "$theme_ismacOS"
+    set -g theme_ismacOS 'no'
+    set -l osname (uname)
+    if test "$osname" = 'Darwin'
+      set -g theme_ismacOS 'yes'
+    end
+  end
+  test -z "$theme_notify_duration"	; and set -g theme_notify_duration	10000
 end
 
 function _cmd_duration -d 'Displays the elapsed time of last command and show notification for long lasting commands'
@@ -126,7 +128,7 @@ function _file_count
 end
 
 function _prompt_user -d "Display current user if different from $default_user"
-  if [ "$theme_display_user" = "yes" ]
+  if [ "$theme_show_user" = "yes" ]
     if [ "$USER" != "$default_user" -o -n "$SSH_CLIENT" ]
       set USER (whoami)
       get_hostname
@@ -146,7 +148,7 @@ function _prompt_user -d "Display current user if different from $default_user"
 end
 function get_hostname -d "Set current hostname to prompt variable $HOSTNAME_PROMPT if connected via SSH"
   set -g HOSTNAME_PROMPT ""
-  if [ "$theme_hide_hostname" != "yes" -a -n "$SSH_CLIENT" ]
+  if [ "$theme_show_hostname" = "yes" -a -n "$SSH_CLIENT" ]
     set -g HOSTNAME_PROMPT (hostname)
   end
 end
@@ -216,7 +218,7 @@ function _is_git_folder     -d "Check if current folder is a git folder"
   git status 1>/dev/null 2>/dev/null
 end
 function _git_ahead -d         'Print the ahead/behind state for the current branch'
-  if [ "$theme_display_git_ahead_verbose" = 'yes' ]
+  if [ "$theme_verbose_git_ahead" = 'yes' ]
     _git_ahead_verbose
     return
   end
