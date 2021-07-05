@@ -252,6 +252,7 @@ function _git_prompt_sha
     set GIT_SHA (command git rev-parse --short HEAD 2>/dev/null)
   else if [ "$theme_git_sha" = 'long' ]
     set GIT_SHA (command git rev-parse         HEAD 2>/dev/null)
+  end
   if test -n "$GIT_SHA"
     echo -n -s (_col brcyan)\[(_col brgrey)$GIT_SHA(_col brcyan)\](_col_res)
   end
