@@ -164,14 +164,8 @@ function _UserSymbol                                        # prompt symbol: '#'
 end
 
 function _prompt_git -a current_dir -d 'Display the actual git state'
-  set -l dirty (command git diff --no-ext-diff --quiet --exit-code; or echo -n ' ')
-  set -l flag_fg (_col brgreen)
-  if [ "$dirty" -o "$staged" ]                              # if either dirty or staged
-    set flag_fg (_col yellow)
-  else if [ "$stashed" ]
-    set flag_fg (_col brred)
-  end
-  echo -n -s $flag_fg(_git_branch)(_git_status)(_col_res)   # add space if dirty to separate from icons "$dirty"
+  # add space if dirty to separate from icons "$dirty"; $flag_fg set in the _git_status function
+  echo -n -s $flag_fg(_git_branch)(_git_status)(_col_res)
 end
 function _git_status -d 'Check git status'
   set -l git_status (command git status --porcelain 2>/dev/null | cut -c 1-2)
@@ -199,6 +193,13 @@ function _git_status -d 'Check git status'
     echo -n (_col brred)$ICON_VCS_STASH
   end
 
+  set -l dirty   (_is_git_dirty)
+  set -g flag_fg (_col brgreen)
+  if [ "$dirty" -o "$added" ]                                                  # if either dirty or added
+    set flag_fg (_col yellow)
+  else if [ "$stashed" ]
+    set flag_fg (_col brred)
+  end
   echo ''
 end
 function _is_git_dirty -d 'Check if branch is dirty'
