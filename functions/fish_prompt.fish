@@ -31,13 +31,16 @@ function fish_right_prompt
   end
   echo -n -s "$errorp$duration$jobsp"             # show error code, command duration and jobs status
   if _is_git_folder                               # show  only if in a git folder
-    set NODEp   (_node_version)                   # Node.js version
-    set PYTHONp (_python_version)                 # Python version
-    set RUBYp   (_ruby_version)                   # Ruby prompt @ gemset
-    echo -n -s "$git_sha$NODEp$PYTHONp$RUBYp"     # -n no newline -s no space separation
     set git_SHAp (_git_prompt_sha)                # git long/short sha depending on config
+    echo -n -s "$git_SHAp"                        # -n no newline -s no space separation
   end
-  echo -n -s (_prompt_user)                       # display user@host if different from default or SSH
+  set NODEp   (_node_version)            # Node.js version
+  set PYTHONp (_python_version)          # Python version
+  set RUBYp   (_ruby_version)            # Ruby prompt @ gemset
+  echo -n -s "$NODEp$PYTHONp$RUBYp"      # show global/local  versions in a git folder or local elsewhere
+  echo -n -s (_prompt_user)              # display user@host if different from default or SSH
+end
+
 function _set_theme_vars -d 'Set default values to theme variables unless already set in user config'
   # Global variables that affect how left and right prompts look like
   test -z "$theme_show_symbols"     	; and set -g theme_show_symbols     	'yes'  	# [yes] no
@@ -256,28 +259,45 @@ end
 
 function _node_version -d "Print Node version via NVM/nodenv: local/global in a git folder, only local elsewhere"
   set -l node_version
-  type -q nvm; and set node_version (string trim -l -c=v (node -v 2>/dev/null)) # trim left 'v' in 'v16.0.0'
-  test -n "$node_version"; and echo -n -s (_col brgreen)$ICON_NODE(_col green)$node_version(_col_res)
+  if type -q nvm
+    if type -q node     # omf nvm wrapper caused previous check to pass even when no NVM was installed
+      set node_version (string trim -l -c=v (node -v 2>/dev/null)) # trim left 'v' in 'v16.0.0', faster than 'nvm current'
+    end
+  end
+  if type -q nodenv     # overwrites NVM version if nodenv is installed
+    set node_version (nodenv version-name)
+  end
+  if test -n "$node_version"
+    if begin _is_git_folder; or _is_node_local; end
+      echo -n -s (_col brgreen)$ICON_NODE(_col green)$node_version(_col_res)
+    end
+  end
+end
+function _is_node_local -d "Check if local Node version is set via .node-version (current/parent folders)"
+  if type -q nodenv
+    nodenv version | grep '.node-version' >/dev/null
+  end
 end
 
 function _ruby_version -d "Print Ruby version via RVM/rbenv: local/global in a git folder, only local elsewhere. Also displays Ruby@gemset version if a gemset is set locally"
   set -l ruby_ver
   if type -q rvm-prompt	; set ruby_ver (rvm-prompt i v g); end
   if type -q rbenv     	; set ruby_ver (rbenv version-name); end # overwrites RVM version if installed
+  if test -n "$ruby_ver"
+    if begin _is_git_folder; or _is_ruby_local; or _is_gemset_local; end
+        echo -n -s (_col brred)$ICON_RUBY(_col green)$ruby_ver(_col_res)
+        if test -n (_rbenv_gemset 2>/dev/null; or echo "")
+          echo -n -s (_col grey)"@"(_col brgrey)(_rbenv_gemset)(_col_res)
+        end
     end
   end
-  if test -n (_rbenv_gemset 2>/dev/null; or echo "")
-    test -n "$ruby_ver"; and echo -n -s (_col brred)$ICON_RUBY(_col green)$ruby_ver(_col grey)"@"(_col brgrey)(_rbenv_gemset)(_col_res)
-  else
-    test -n "$ruby_ver"; and echo -n -s (_col brred)$ICON_RUBY(_col green)$ruby_ver(_col_res)
-  end
 end
-
-function _rbenv_gemset -d "Get main current gemset name"
+function _rbenv_gemset -d "Get the name of the currently active gemset"
   if type -q rbenv
-    if test (rbenv gemset active 2>/dev/null)                           #redirects stderr to /null
-      set -l active_gemset (string split -m1 " " (rbenv gemset active))
-      echo -n -s $active_gemset[1]
+    set -l _gemset_active_full (rbenv gemset active 2>/dev/null)
+    if test -n "$_gemset_active"
+      set -l _gemset_active_list (string split -m1 " " "$_gemset_active_full")
+      echo -n -s $_gemset_active_list[1]
     else
       echo ''
     end
@@ -285,13 +305,26 @@ function _rbenv_gemset -d "Get main current gemset name"
     echo ''
   end
 end
+function _is_ruby_local -d "Check if local ruby version is set via .ruby-version (current/parent folders)"
+  if type -q rbenv; rbenv version | grep '.ruby-version' >/dev/null; end
+end
+function _is_gemset_local -d "Check if local gemset version is set via .rbenv-gemsets (current/parent folders)"
+  if type -q rbenv; rbenv gemset file | grep '.rbenv-gemsets' >/dev/null; end
+end
 
 function _python_version -d "Print Python version via pyenv: local/global in a git folder, only local elsewhere"
   set -l python_version
-  if which pyenv >/dev/null 2>&1
-    set python_version (pyenv version-name)
+  if type -q pyenv
+    if begin _is_git_folder; or _is_python_local; end
+      set python_version (pyenv version-name)
+    end
   end
-  test -n "$python_version"; and echo -n -s (_col brblue)$ICON_PYTHON(_col green)$python_version(_col_res)
+  if test -n "$python_version"
+    echo -n -s (_col brblue)$ICON_PYTHON(_col green)$python_version(_col_res)
+  end
+end
+function _is_python_local -d "Check if local python version is set via .python-version (current/parent folders)"
+  if type -q pyenv; pyenv version | grep '.python-version' >/dev/null; end
 end
 
 function _set_theme_icons
