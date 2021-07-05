@@ -169,33 +169,29 @@ function _prompt_git -a current_dir -d 'Display the actual git state'
 end
 function _git_status -d 'Check git status'
   set -l git_status (command git status --porcelain 2>/dev/null | cut -c 1-2)
-  set -l ahead (_git_ahead); echo -n $ahead                                    #show # of commits ahead/behind
-  if [ (echo -sn $git_status\n | egrep -c "[ACDMT][ MT]|[ACMT]D") -gt 0 ]      #added
-    echo -n (_col green)$ICON_VCS_STAGED
-  end
-  #set -l staged  (command git diff --cached --no-ext-diff --quiet --exit-code; or echo -n '~')      #was '~'
-  if [ (echo -sn $git_status\n | egrep -c "[ ACMRT]D") -gt 0 ]                  #deleted
-    echo -n (_col red)$ICON_VCS_DELETED
-  end
-  if [ (echo -sn $git_status\n | egrep -c ".[MT]") -gt 0 ]                      #modified
-    echo -n (_col $ORANGE)$ICON_VCS_MODIFIED
-  end
-  if [ (echo -sn $git_status\n | egrep -c "R.") -gt 0 ]                         #renamed
-    echo -n (_col purple)$ICON_VCS_RENAME
-  end
-  if [ (echo -sn $git_status\n | egrep -c "AA|DD|U.|.U") -gt 0 ]                #unmerged
-    echo -n (_col brred)$ICON_VCS_UNMERGED(_col_res)
-  end
-  if [ (echo -sn $git_status\n | egrep -c "\?\?") -gt 0 ]                       #untracked (new) files
-    echo -n (_col brcyan)$ICON_VCS_UNTRACKED
-  end
-  if test (command git rev-parse --verify --quiet refs/stash >/dev/null)        #stashed (was '$')
+  set -l ahead (_git_ahead); echo -n $ahead                                    # show # of commits ahead/behind
+  set -l added; set -l stashed
+  set -l count_added    	(count (string match -ra "[ACDMT][ MT]|[ACMT]D" $git_status))	# added/staged
+  set -l count_deleted  	(count (string match -ra "[ ACMRT]D"            $git_status))	# deleted
+  set -l count_modified 	(count (string match -ra ".[MT]"                $git_status))	# modified
+  set -l count_renamed  	(count (string match -ra "R."                   $git_status))	# renamed
+  set -l count_unmerged 	(count (string match -ra "AA|DD|U.|.U"          $git_status))	# unmerged
+  set -l count_untracked	(count (string match -ra "\?\?"                 $git_status))	# untracked (new)
+
+  if test $count_added    	-gt 0; echo -n (_col green  )$ICON_VCS_STAGED; set added 'y'	; end
+  if test $count_deleted  	-gt 0; echo -n (_col red    )$ICON_VCS_DELETED              	; end
+  if test $count_modified 	-gt 0; echo -n (_col $ORANGE)$ICON_VCS_MODIFIED             	; end
+  if test $count_renamed  	-gt 0; echo -n (_col purple )$ICON_VCS_RENAMED              	; end
+  if test $count_unmerged 	-gt 0; echo -n (_col brred  )$ICON_VCS_UNMERGED             	; end
+  if test $count_untracked	-gt 0; echo -n (_col brcyan )$ICON_VCS_UNTRACKED            	; end
+  if test (command git rev-parse --verify --quiet refs/stash >/dev/null)                # stashed (was '$')
     echo -n (_col brred)$ICON_VCS_STASH
+    set stashed 'y'
   end
 
   set -l dirty   (_is_git_dirty)
   set -g flag_fg (_col brgreen)
-  if [ "$dirty" -o "$added" ]                                                  # if either dirty or added
+  if [ "$dirty" -o "$added" ]
     set flag_fg (_col yellow)
   else if [ "$stashed" ]
     set flag_fg (_col brred)
@@ -343,7 +339,7 @@ function _set_theme_icons
   set -g ICON_VCS_STAGED          	\UF06B" "	#  (added) →
   set -g ICON_VCS_DELETED         	\UF06C" "	# 
   set -g ICON_VCS_DIFF            	\UF06B" "	# 
-  set -g ICON_VCS_RENAME          	\UF06E" "	# 
+  set -g ICON_VCS_RENAMED         	\UF06E" "	# 
   set -g ICON_VCS_STASH           	\UF0CF" "	#      #✭: there are stashed commits
   set -g ICON_VCS_INCOMING_CHANGES	\UF00B" "	#  or \UE1EB or \UE131
   set -g ICON_VCS_OUTGOING_CHANGES	\UF00C" "	#  or \UE1EC or 
