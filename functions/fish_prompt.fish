@@ -31,11 +31,11 @@ function fish_right_prompt
   end
   echo -n -s "$errorp$duration$jobsp"             # show error code, command duration and jobs status
   if _is_git_folder                               # show  only if in a git folder
-    set git_sha (_git_prompt_short_sha)           # git short sha
     set NODEp   (_node_version)                   # Node.js version
     set PYTHONp (_python_version)                 # Python version
     set RUBYp   (_ruby_version)                   # Ruby prompt @ gemset
     echo -n -s "$git_sha$NODEp$PYTHONp$RUBYp"     # -n no newline -s no space separation
+    set git_SHAp (_git_prompt_sha)                # git long/short sha depending on config
   end
   echo -n -s (_prompt_user)                       # display user@host if different from default or SSH
 function _set_theme_vars -d 'Set default values to theme variables unless already set in user config'
@@ -242,13 +242,16 @@ function _git_ahead_verbose -d 'Print a more verbose ahead/behind state for the 
       echo (_col blue)"$ICON_ARROW_UP$ahead"(_col red)"$ICON_ARROW_DOWN$behind"
   end
 end
-function _git_prompt_short_sha
-  set -l SHA (command git rev-parse --short HEAD 2>/dev/null)
-  test -n "$SHA"; and echo -n -s (_col brcyan)\[(_col brgrey)$SHA(_col brcyan)\](_col_res)
-end
-function _git_prompt_long_sha
-  set -l SHA (command git rev-parse HEAD 2>/dev/null)
-  test -n "$SHA"; and echo -n -s (_col brcyan)\[(_col brgrey)$SHA(_col brcyan)\](_col_res)
+
+function _git_prompt_sha
+  set -l GIT_SHA ''
+  if      [ "$theme_git_sha" = 'short' ]
+    set GIT_SHA (command git rev-parse --short HEAD 2>/dev/null)
+  else if [ "$theme_git_sha" = 'long' ]
+    set GIT_SHA (command git rev-parse         HEAD 2>/dev/null)
+  if test -n "$GIT_SHA"
+    echo -n -s (_col brcyan)\[(_col brgrey)$GIT_SHA(_col brcyan)\](_col_res)
+  end
 end
 
 function _node_version -d "Print Node version via NVM/nodenv: local/global in a git folder, only local elsewhere"
