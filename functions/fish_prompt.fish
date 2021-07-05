@@ -1,7 +1,7 @@
 function fish_prompt
   set -g last_status $status                                         # exit status of last command
   #set -l count (_file_count)
-  _icons_initialize
+  _set_theme_icons                                                   # assign icons from patched fonts to vars
   _set_theme_vars                                                    # set theme vars if not set by user
   set -l p_path2 (_col brblue o u)(prompt_pwd2)(_col_res)            # path shortened to last two folders ($count)
   set -l symbols ''                                                  # add some pre-path symbols
@@ -31,7 +31,6 @@ function fish_right_prompt
   end
   echo -n -s "$errorp$duration$jobsp"             # show error code, command duration and jobs status
   if _is_git_folder                               # show  only if in a git folder
-  #command git rev-parse --is-inside-work-tree 1>/dev/null 2>/dev/null
     set git_sha (_git_prompt_short_sha)           # git short sha
     set NODEp   (_node_version)                   # Node.js version
     set PYTHONp (_python_version)                 # Python version
@@ -200,7 +199,7 @@ function _git_status -d 'Check git status'
   echo ''
 end
 function _is_git_dirty -d 'Check if branch is dirty'
-  echo (command git status -s --ignore-submodules=dirty 2>/dev/null)             #'-s' short format
+  echo (command git status --porcelain --ignore-submodules=dirty 2>/dev/null)
 end
 function _git_branch -d "Display the current git state"
   set -l ref
@@ -208,7 +207,7 @@ function _git_branch -d "Display the current git state"
     set ref (command git symbolic-ref HEAD 2>/dev/null)
     if [ $status -gt 0 ]
       set -l branch (command git show-ref --head -s --abbrev |head -n1 2>/dev/null)
-      set ref " $ICON_VCS_DETACHED_BRANCH$branch"
+      set ref "$ICON_VCS_DETACHED_BRANCH$branch"
     end
     set -l branch (echo $ref | sed  "s-refs/heads/--")
     echo " $ICON_VCS_BRANCH"(_col magenta)"$branch"(_col_res)
@@ -252,19 +251,16 @@ function _git_prompt_long_sha
   test -n "$SHA"; and echo -n -s (_col brcyan)\[(_col brgrey)$SHA(_col brcyan)\](_col_res)
 end
 
-function _node_version -d "Get the currently used node version if NVM exists"
+function _node_version -d "Print Node version via NVM/nodenv: local/global in a git folder, only local elsewhere"
   set -l node_version
   type -q nvm; and set node_version (string trim -l -c=v (node -v 2>/dev/null)) # trim left 'v' in 'v16.0.0'
   test -n "$node_version"; and echo -n -s (_col brgreen)$ICON_NODE(_col green)$node_version(_col_res)
 end
 
-function _ruby_version -d "Get RVM or rbenv version and output"
+function _ruby_version -d "Print Ruby version via RVM/rbenv: local/global in a git folder, only local elsewhere. Also displays Ruby@gemset version if a gemset is set locally"
   set -l ruby_ver
-  if which rvm-prompt >/dev/null 2>&1
-    set ruby_ver (rvm-prompt i v g)
-  else
-    if which rbenv >/dev/null 2>&1
-      set ruby_ver (rbenv version-name)
+  if type -q rvm-prompt	; set ruby_ver (rvm-prompt i v g); end
+  if type -q rbenv     	; set ruby_ver (rbenv version-name); end # overwrites RVM version if installed
     end
   end
   if test -n (_rbenv_gemset 2>/dev/null; or echo "")
@@ -287,7 +283,7 @@ function _rbenv_gemset -d "Get main current gemset name"
   end
 end
 
-function _python_version -d "Get python version if pyenv is installed"
+function _python_version -d "Print Python version via pyenv: local/global in a git folder, only local elsewhere"
   set -l python_version
   if which pyenv >/dev/null 2>&1
     set python_version (pyenv version-name)
@@ -295,7 +291,7 @@ function _python_version -d "Get python version if pyenv is installed"
   test -n "$python_version"; and echo -n -s (_col brblue)$ICON_PYTHON(_col green)$python_version(_col_res)
 end
 
-function _icons_initialize
+function _set_theme_icons
   #echo A quick test of glyph output: \Uf00a \ue709 \ue791 \ue739 \uF0DD \UF020 \UF01F \UF07B \UF015 \UF00C \UF00B \UF06B \UF06C \UF06E \UF091 \UF02C \UF026 \UF06D \UF0CF \UF03A \UF005 \UF03D \UF081 \UF02A \UE606 \UE73C
   set -g ORANGE                   	FF8C00   	# FF8C00 dark orange, FFA500 orange, another one fa0 o
   set -g ICON_NODE                	\UE718" "	#  from Devicons or ⬢
