@@ -88,9 +88,9 @@ function _cmd_duration -d 'Displays the elapsed time of last command and show no
     end
     # Show a system notificaton when...
     set exclude_cmd "bash|less|man|more|ssh"
-    if     test "$theme_ismacOS" = 'yes'                    	# 1. on a macOS
-       and test "$CMD_DURATION" -gt "$theme_notify_duration"	# 2. a command duration exceeds a threshold
-       and echo $history[1] | grep -vqE "^($exclude_cmd).*" 	# 3. a command isn't excluded
+    if     test "$theme_ismacOS" = 'yes'                           	# 1. on a macOS
+       and test "$CMD_DURATION" -gt "$theme_notify_duration"       	# 2. a command duration exceeds a threshold
+       and echo $history[1] | string match -rvq "^($exclude_cmd).*"	# 3. a command isn't excluded
       # 4. iTerm and Terminal are not focused
       echo "
         tell application \"System Events\"
@@ -264,8 +264,8 @@ function _git_ahead_verbose -d 'Print a more verbose ahead/behind state for the 
   if [ $status != 0 ]
     return
   end
-  set -l behind (count (for arg in $commits; echo $arg; end | grep '^<'))
-  set -l ahead  (count (for arg in $commits; echo $arg; end | grep -v '^<'))
+  set -l behind (count (for arg in $commits; echo $arg; end | string match -r  '^<'))
+  set -l ahead  (count (for arg in $commits; echo $arg; end | string match -rv '^<'))
   switch "$ahead $behind"
     case ''     # no upstream
     case '0 0'  # equal to upstream
@@ -309,7 +309,7 @@ function _node_version -d "Print Node version via NVM/nodenv: local/global in a 
 end
 function _is_node_local -d "Check if local Node version is set via .node-version (current/parent folders)"
   if type -q nodenv
-    nodenv version | grep '.node-version' >/dev/null
+    nodenv version | string match -r '.node-version' >/dev/null
   end
 end
 
@@ -340,10 +340,10 @@ function _rbenv_gemset -d "Get the name of the currently active gemset"
   end
 end
 function _is_ruby_local -d "Check if local ruby version is set via .ruby-version (current/parent folders)"
-  if type -q rbenv; rbenv version | grep '.ruby-version' >/dev/null; end
+  if type -q rbenv; rbenv version | string match -r '.ruby-version' >/dev/null; end
 end
 function _is_gemset_local -d "Check if local gemset version is set via .rbenv-gemsets (current/parent folders)"
-  if type -q rbenv; rbenv gemset file | grep '.rbenv-gemsets' >/dev/null; end
+  if type -q rbenv; rbenv gemset file | string match -r '.rbenv-gemsets' >/dev/null; end
 end
 
 function _python_version -d "Print Python version via pyenv: local/global in a git folder, only local elsewhere"
@@ -358,7 +358,7 @@ function _python_version -d "Print Python version via pyenv: local/global in a g
   end
 end
 function _is_python_local -d "Check if local python version is set via .python-version (current/parent folders)"
-  if type -q pyenv; pyenv version | grep '.python-version' >/dev/null; end
+  if type -q pyenv; pyenv version | string match -r '.python-version' >/dev/null; end
 end
 
 function _set_theme_icons
