@@ -34,9 +34,9 @@ function fish_right_prompt
     set git_SHAp (_git_prompt_sha)                # git long/short sha depending on config
     echo -n -s "$git_SHAp"                        # -n no newline -s no space separation
   end
-  set NODEp   (_node_version)            # Node.js version
-  set PYTHONp (_python_version)          # Python version
-  set RUBYp   (_ruby_version)            # Ruby prompt @ gemset
+  test "$theme_show_node_v"   = 'yes'; and set NODEp   (_node_version)   # Node.js version
+  test "$theme_show_python_v" = 'yes'; and set PYTHONp (_python_version) # Python version
+  test "$theme_show_ruby_v"   = 'yes'; and set RUBYp   (_ruby_version)   # Ruby prompt @ gemset
   echo -n -s "$NODEp$PYTHONp$RUBYp"      # show global/local  versions in a git folder or local elsewhere
   echo -n -s (_prompt_user)              # display user@host if different from default or SSH
 end
@@ -49,6 +49,9 @@ function _set_theme_vars -d 'Set default values to theme variables unless alread
   test -z "$theme_show_user"        	; and set -g theme_show_user        	'no'   	# [no] yes
   test -z "$theme_show_hostname"    	; and set -g theme_show_hostname    	'yes'  	# [yes] no
   test -z "$theme_show_git_count"   	; and set -g theme_show_git_count   	'no'   	# [no] yes
+  test -z "$theme_show_node_v"      	; and set -g theme_show_node_v      	'yes'  	# [yes] no
+  test -z "$theme_show_python_v"    	; and set -g theme_show_python_v    	'yes'  	# [yes] no
+  test -z "$theme_show_ruby_v"      	; and set -g theme_show_ruby_v      	'yes'  	# [yes] no
 
   # Other global variables
   if test -z "$theme_ismacOS"
