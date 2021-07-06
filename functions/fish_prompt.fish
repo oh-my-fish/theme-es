@@ -48,6 +48,7 @@ function _set_theme_vars -d 'Set default values to theme variables unless alread
   test -z "$theme_git_sha"          	; and set -g theme_git_sha          	'short'	# [short] long no
   test -z "$theme_show_user"        	; and set -g theme_show_user        	'no'   	# [no] yes
   test -z "$theme_show_hostname"    	; and set -g theme_show_hostname    	'yes'  	# [yes] no
+  test -z "$theme_show_git_count"   	; and set -g theme_show_git_count   	'no'   	# [no] yes
 
   # Other global variables
   if test -z "$theme_ismacOS"
@@ -170,28 +171,58 @@ end
 function _git_status -d 'Check git status'
   set -l git_status (command git status --porcelain 2>/dev/null | cut -c 1-2)
   set -l ahead (_git_ahead); echo -n $ahead                                    # show # of commits ahead/behind
-  set -l added; set -l stashed
-  set -l count_added    	(count (string match -ra "[ACDMT][ MT]|[ACMT]D" $git_status))	# added/staged
+  set -l staged; set -l stashed
+  set -l count_staged   	(count (string match -ra "[ACDMT][ MT]|[ACMT]D" $git_status))	# added/staged
   set -l count_deleted  	(count (string match -ra "[ ACMRT]D"            $git_status))	# deleted
   set -l count_modified 	(count (string match -ra ".[MT]"                $git_status))	# modified
   set -l count_renamed  	(count (string match -ra "R."                   $git_status))	# renamed
   set -l count_unmerged 	(count (string match -ra "AA|DD|U.|.U"          $git_status))	# unmerged
   set -l count_untracked	(count (string match -ra "\?\?"                 $git_status))	# untracked (new)
 
-  if test $count_added    	-gt 0; echo -n (_col green  )$ICON_VCS_STAGED; set added 'y'	; end
-  if test $count_deleted  	-gt 0; echo -n (_col red    )$ICON_VCS_DELETED              	; end
-  if test $count_modified 	-gt 0; echo -n (_col $ORANGE)$ICON_VCS_MODIFIED             	; end
-  if test $count_renamed  	-gt 0; echo -n (_col purple )$ICON_VCS_RENAMED              	; end
-  if test $count_unmerged 	-gt 0; echo -n (_col brred  )$ICON_VCS_UNMERGED             	; end
-  if test $count_untracked	-gt 0; echo -n (_col brcyan )$ICON_VCS_UNTRACKED            	; end
+  if test $count_staged       -gt 0
+    echo -ns (_col green)  $ICON_VCS_STAGED; set staged 'y'
+    if test \( "$theme_show_git_count" = 'yes' \) -a \( $count_staged    -gt 1 \)
+      echo -ns $count_staged
+    else; echo -ns ' '; end
+  end
+  if test $count_deleted     -gt 0
+    echo -ns (_col red)    $ICON_VCS_DELETED
+    if test \( "$theme_show_git_count" = 'yes' \) -a \( $count_deleted  -gt 1 \)
+      echo -ns $count_deleted
+    else; echo -ns ' '; end
+  end
+  if test $count_modified    -gt 0
+    echo -ns (_col $ORANGE)$ICON_VCS_MODIFIED
+    if test \( "$theme_show_git_count" = 'yes' \) -a \( $count_modified -gt 1 \)
+      echo -ns $count_modified
+    else; echo -ns ' '; end
+  end
+  if test $count_renamed     -gt 0
+    echo -ns (_col purple) $ICON_VCS_RENAMED
+    if test \( "$theme_show_git_count" = 'yes' \) -a \( $count_renamed  -gt 1 \)
+      echo -ns $count_renamed
+    else; echo -ns ' '; end
+  end
+  if test $count_unmerged    -gt 0
+    echo -ns (_col brred)  $ICON_VCS_UNMERGED
+    if test \( "$theme_show_git_count" = 'yes' \) -a \( $count_unmerged -gt 1 \)
+      echo -ns $count_unmerged
+    else; echo -ns ' '; end
+  end
+  if test $count_untracked   -gt 0
+    echo -ns (_col brcyan) $ICON_VCS_UNTRACKED
+    if test \( "$theme_show_git_count" = 'yes' \) -a \( $count_untracked -gt 1 \)
+      echo -ns $count_untracked
+    else; echo -ns ' '; end
+  end
   if test (command git rev-parse --verify --quiet refs/stash >/dev/null)                # stashed (was '$')
-    echo -n (_col brred)$ICON_VCS_STASH
+    echo -ns (_col brred)$ICON_VCS_STASH
     set stashed 'y'
   end
 
   set -l dirty   (_is_git_dirty)
   set -g flag_fg (_col brgreen)
-  if [ "$dirty" -o "$added" ]
+  if [ "$dirty" -o "$staged" ]
     set flag_fg (_col yellow)
   else if [ "$stashed" ]
     set flag_fg (_col brred)
@@ -333,13 +364,13 @@ function _set_theme_icons
   set -g ICON_PYTHON              	\UE606" "	# \UE606; \UE73C
   # set -g ICON_PERL              	\UE606" "	# \UE606; \UE73C
   set -g ICON_TEST                	\UF091   	# 
-  set -g ICON_VCS_UNTRACKED       	\UF02C" "	#    #●: there are untracked (new) files
-  set -g ICON_VCS_UNMERGED        	\UF026" "	#    #═: there are unmerged commits
-  set -g ICON_VCS_MODIFIED        	\UF06D" "	# 
-  set -g ICON_VCS_STAGED          	\UF06B" "	#  (added) →
-  set -g ICON_VCS_DELETED         	\UF06C" "	# 
+  set -g ICON_VCS_STAGED          	\UF06B   	#  (added) →
+  set -g ICON_VCS_DELETED         	\UF06C   	# 
+  set -g ICON_VCS_MODIFIED        	\UF06D   	# 
+  set -g ICON_VCS_RENAMED         	\UF06E   	# 
+  set -g ICON_VCS_UNMERGED        	\UF026   	#    #═: there are unmerged commits
+  set -g ICON_VCS_UNTRACKED       	\UF02C   	#    #●: there are untracked (new) files
   set -g ICON_VCS_DIFF            	\UF06B" "	# 
-  set -g ICON_VCS_RENAMED         	\UF06E" "	# 
   set -g ICON_VCS_STASH           	\UF0CF" "	#      #✭: there are stashed commits
   set -g ICON_VCS_INCOMING_CHANGES	\UF00B" "	#  or \UE1EB or \UE131
   set -g ICON_VCS_OUTGOING_CHANGES	\UF00C" "	#  or \UE1EC or 
