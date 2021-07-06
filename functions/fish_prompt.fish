@@ -6,8 +6,8 @@ function fish_prompt
   set -l p_path2 (_col brblue o u)(prompt_pwd2)(_col_res)            # path shortened to last two folders ($count)
   set -l symbols ''                                                  # add some pre-path symbols
   if [ $theme_show_symbols = 'yes' ]
-    if [ ! -w . ];    set symbols $symbols(_col ff6600)$ICON_LOCK; end    #
-    if set -q -x VIM; set symbols $symbols(_col 3300ff o)$ICON_VIM; end   #
+    if [ ! -w . ];    set symbols $symbols(_col ff6600)$theme_icon_LOCK; end    #
+    if set -q -x VIM; set symbols $symbols(_col 3300ff o)$theme_icon_VIM; end   #
   end
   if [ (_is_git_dirty) ]; set dirty ''; else; set dirty ' '; end     # add space only in clean git branches
   if test "$last_status" = 0                                         # prompt symbol: green normal, red on error
@@ -27,7 +27,7 @@ function fish_right_prompt
   end
   set -l duration (_cmd_duration)                 # set duration of last command
   if [ (jobs -l | wc -l) -gt 0 ]                  # set ⚙ if any background jobs exit
-    set jobsp $ICON_JOBS
+    set jobsp $theme_icon_JOBS
   end
   echo -n -s "$errorp$duration$jobsp"             # show error code, command duration and jobs status
   if _is_git_folder                               # show  only if in a git folder
@@ -182,43 +182,43 @@ function _git_status -d 'Check git status'
   set -l count_untracked	(count (string match -ra "\?\?"                 $git_status))	# untracked (new)
 
   if test $count_staged       -gt 0
-    echo -ns (_col green)  $ICON_VCS_STAGED; set staged 'y'
+    echo -ns (_col green)  $theme_icon_VCS_STAGED; set staged 'y'
     if test \( "$theme_show_git_count" = 'yes' \) -a \( $count_staged    -gt 1 \)
       echo -ns $count_staged
     else; echo -ns ' '; end
   end
   if test $count_deleted     -gt 0
-    echo -ns (_col red)    $ICON_VCS_DELETED
+    echo -ns (_col red)    $theme_icon_VCS_DELETED
     if test \( "$theme_show_git_count" = 'yes' \) -a \( $count_deleted  -gt 1 \)
       echo -ns $count_deleted
     else; echo -ns ' '; end
   end
   if test $count_modified    -gt 0
-    echo -ns (_col $ORANGE)$ICON_VCS_MODIFIED
+    echo -ns (_col $ORANGE)$theme_icon_VCS_MODIFIED
     if test \( "$theme_show_git_count" = 'yes' \) -a \( $count_modified -gt 1 \)
       echo -ns $count_modified
     else; echo -ns ' '; end
   end
   if test $count_renamed     -gt 0
-    echo -ns (_col purple) $ICON_VCS_RENAMED
+    echo -ns (_col purple) $theme_icon_VCS_RENAMED
     if test \( "$theme_show_git_count" = 'yes' \) -a \( $count_renamed  -gt 1 \)
       echo -ns $count_renamed
     else; echo -ns ' '; end
   end
   if test $count_unmerged    -gt 0
-    echo -ns (_col brred)  $ICON_VCS_UNMERGED
+    echo -ns (_col brred)  $theme_icon_VCS_UNMERGED
     if test \( "$theme_show_git_count" = 'yes' \) -a \( $count_unmerged -gt 1 \)
       echo -ns $count_unmerged
     else; echo -ns ' '; end
   end
   if test $count_untracked   -gt 0
-    echo -ns (_col brcyan) $ICON_VCS_UNTRACKED
+    echo -ns (_col brcyan) $theme_icon_VCS_UNTRACKED
     if test \( "$theme_show_git_count" = 'yes' \) -a \( $count_untracked -gt 1 \)
       echo -ns $count_untracked
     else; echo -ns ' '; end
   end
   if test (command git rev-parse --verify --quiet refs/stash >/dev/null)                # stashed (was '$')
-    echo -ns (_col brred)$ICON_VCS_STASH
+    echo -ns (_col brred)$theme_icon_VCS_STASH
     set stashed 'y'
   end
 
@@ -240,10 +240,10 @@ function _git_branch -d "Display the current git state"
     set ref (command git symbolic-ref HEAD 2>/dev/null)
     if [ $status -gt 0 ]
       set -l branch (command git show-ref --head -s --abbrev |head -n1 2>/dev/null)
-      set ref "$ICON_VCS_DETACHED_BRANCH$branch"
+      set ref "$theme_icon_VCS_DETACHED_BRANCH$branch"
     end
     set -l branch (echo $ref | sed  "s-refs/heads/--")
-    echo " $ICON_VCS_BRANCH"(_col magenta)"$branch"(_col_res)
+    echo " $theme_icon_VCS_BRANCH"(_col magenta)"$branch"(_col_res)
   end
 end
 function _is_git_folder     -d "Check if current folder is a git folder"
@@ -268,11 +268,11 @@ function _git_ahead_verbose -d 'Print a more verbose ahead/behind state for the 
     case '0 0'  # equal to upstream
       return
     case '* 0'  # ahead of upstream
-      echo (_col blue)"$ICON_ARROW_UP$ahead"
+      echo (_col blue)"$theme_icon_ARROW_UP$ahead"
     case '0 *'  # behind upstream
-      echo (_col red)"$ICON_ARROW_DOWN$behind"
+      echo (_col red)"$theme_icon_ARROW_DOWN$behind"
     case '*'    # diverged from upstream
-      echo (_col blue)"$ICON_ARROW_UP$ahead"(_col red)"$ICON_ARROW_DOWN$behind"
+      echo (_col blue)"$theme_icon_ARROW_UP$ahead"(_col red)"$theme_icon_ARROW_DOWN$behind"
   end
 end
 
@@ -300,7 +300,7 @@ function _node_version -d "Print Node version via NVM/nodenv: local/global in a 
   end
   if test -n "$node_version"
     if begin _is_git_folder; or _is_node_local; end
-      echo -n -s (_col brgreen)$ICON_NODE(_col green)$node_version(_col_res)
+      echo -n -s (_col brgreen)$theme_icon_NODE(_col green)$node_version(_col_res)
     end
   end
 end
@@ -316,7 +316,7 @@ function _ruby_version -d "Print Ruby version via RVM/rbenv: local/global in a g
   if type -q rbenv     	; set ruby_ver (rbenv version-name); end # overwrites RVM version if installed
   if test -n "$ruby_ver"
     if begin _is_git_folder; or _is_ruby_local; or _is_gemset_local; end
-        echo -n -s (_col brred)$ICON_RUBY(_col green)$ruby_ver(_col_res)
+        echo -n -s (_col brred)$theme_icon_RUBY(_col green)$ruby_ver(_col_res)
         if test -n (_rbenv_gemset 2>/dev/null; or echo "")
           echo -n -s (_col grey)"@"(_col brgrey)(_rbenv_gemset)(_col_res)
         end
@@ -351,7 +351,7 @@ function _python_version -d "Print Python version via pyenv: local/global in a g
     end
   end
   if test -n "$python_version"
-    echo -n -s (_col brblue)$ICON_PYTHON(_col green)$python_version(_col_res)
+    echo -n -s (_col brblue)$theme_icon_PYTHON(_col green)$python_version(_col_res)
   end
 end
 function _is_python_local -d "Check if local python version is set via .python-version (current/parent folders)"
@@ -360,40 +360,40 @@ end
 
 function _set_theme_icons
   #echo A quick test of glyph output: \Uf00a \ue709 \ue791 \ue739 \uF0DD \UF020 \UF01F \UF07B \UF015 \UF00C \UF00B \UF06B \UF06C \UF06E \UF091 \UF02C \UF026 \UF06D \UF0CF \UF03A \UF005 \UF03D \UF081 \UF02A \UE606 \UE73C
-  set -g ICON_NODE                	\UE718" "	#  from Devicons or ⬢
-  set -g ICON_RUBY                	\UE791" "	# \UE791 from Devicons; \UF047; \UE739; 💎
-  set -g ICON_PYTHON              	\UE606" "	# \UE606; \UE73C
-  # set -g ICON_PERL              	\UE606" "	# \UE606; \UE73C
-  set -g ICON_TEST                	\UF091   	# 
-  set -g ICON_VCS_STAGED          	\UF06B   	#  (added) →
-  set -g ICON_VCS_DELETED         	\UF06C   	# 
-  set -g ICON_VCS_MODIFIED        	\UF06D   	# 
-  set -g ICON_VCS_RENAMED         	\UF06E   	# 
-  set -g ICON_VCS_UNMERGED        	\UF026   	#    #═: there are unmerged commits
-  set -g ICON_VCS_UNTRACKED       	\UF02C   	#    #●: there are untracked (new) files
-  set -g ICON_VCS_DIFF            	\UF06B" "	# 
-  set -g ICON_VCS_STASH           	\UF0CF" "	#      #✭: there are stashed commits
-  set -g ICON_VCS_INCOMING_CHANGES	\UF00B" "	#  or \UE1EB or \UE131
-  set -g ICON_VCS_OUTGOING_CHANGES	\UF00C" "	#  or \UE1EC or 
-  set -g ICON_VCS_TAG             	\UF015" "	# 
-  set -g ICON_VCS_BOOKMARK        	\UF07B" "	# 
-  set -g ICON_VCS_COMMIT          	\UF01F" "	# 
-  set -g ICON_VCS_BRANCH          	\UE0A0   	# \UE0A0 or \UF020
-  set -g ICON_VCS_REMOTE_BRANCH   	\UE804" "	#  not displayed, should be branch icon on a book
-  set -g ICON_VCS_DETACHED_BRANCH 	\U27A6" "	# ➦
-  set -g ICON_VCS_GIT             	\UF00A" "	#  from Octicons
-  set -g ICON_VCS_HG              	\UF0DD" "	# Got cut off from Octicons on patching
-  set -g ICON_VCS_CLEAN           	\UF03A   	# 
-  set -g ICON_VCS_PUSH            	\UF005" "	# 
-  set -g ICON_VCS_DIRTY           	±        	#
-  set -g ICON_ARROW_UP            	\UF03D"" 	#  ↑
-  set -g ICON_ARROW_DOWN          	\UF03F"" 	#  ↓
-  set -g ICON_OK                  	\UF03A   	# 
-  set -g ICON_FAIL                	\UF081   	# 
-  set -g ICON_STAR                	\UF02A   	# 
-  set -g ICON_JOBS                	\U2699" "	# ⚙
-  set -g ICON_VIM                 	\UE7C5" "	# 
-  set -g ICON_LOCK                	        	#
+  test -z "$theme_icon_NODE"                	; and set -g theme_icon_NODE                	\UE718" "	#  from Devicons or ⬢
+  test -z "$theme_icon_RUBY"                	; and set -g theme_icon_RUBY                	\UE791" "	# \UE791 from Devicons; \UF047; \UE739; 💎
+  test -z "$theme_icon_PYTHON"              	; and set -g theme_icon_PYTHON              	\UE606" "	# \UE606; \UE73C
+  test -z "$theme_icon_PERL"                	; and set -g theme_icon_PERL                	\UE606" "	# \UE606; \UE73C
+  test -z "$theme_icon_TEST"                	; and set -g theme_icon_TEST                	\UF091   	# 
+  test -z "$theme_icon_VCS_STAGED"          	; and set -g theme_icon_VCS_STAGED          	\UF06B   	#  (added) →
+  test -z "$theme_icon_VCS_DELETED"         	; and set -g theme_icon_VCS_DELETED         	\UF06C   	# 
+  test -z "$theme_icon_VCS_MODIFIED"        	; and set -g theme_icon_VCS_MODIFIED        	\UF06D   	# 
+  test -z "$theme_icon_VCS_RENAMED"         	; and set -g theme_icon_VCS_RENAMED         	\UF06E   	# 
+  test -z "$theme_icon_VCS_UNMERGED"        	; and set -g theme_icon_VCS_UNMERGED        	\UF026   	#    #═: there are unmerged commits
+  test -z "$theme_icon_VCS_UNTRACKED"       	; and set -g theme_icon_VCS_UNTRACKED       	\UF02C   	#    #●: there are untracked (new) files
+  test -z "$theme_icon_VCS_DIFF"            	; and set -g theme_icon_VCS_DIFF            	\UF06B" "	# 
+  test -z "$theme_icon_VCS_STASH"           	; and set -g theme_icon_VCS_STASH           	\UF0CF" "	#      #✭: there are stashed commits
+  test -z "$theme_icon_VCS_INCOMING_CHANGES"	; and set -g theme_icon_VCS_INCOMING_CHANGES	\UF00B" "	#  or \UE1EB or \UE131
+  test -z "$theme_icon_VCS_OUTGOING_CHANGES"	; and set -g theme_icon_VCS_OUTGOING_CHANGES	\UF00C" "	#  or \UE1EC or 
+  test -z "$theme_icon_VCS_TAG"             	; and set -g theme_icon_VCS_TAG             	\UF015" "	# 
+  test -z "$theme_icon_VCS_BOOKMARK"        	; and set -g theme_icon_VCS_BOOKMARK        	\UF07B" "	# 
+  test -z "$theme_icon_VCS_COMMIT"          	; and set -g theme_icon_VCS_COMMIT          	\UF01F" "	# 
+  test -z "$theme_icon_VCS_BRANCH"          	; and set -g theme_icon_VCS_BRANCH          	\UE0A0   	# \UE0A0 or \UF020
+  test -z "$theme_icon_VCS_BRANCH_REMOTE"   	; and set -g theme_icon_VCS_BRANCH_REMOTE   	\UE804" "	#  not displayed, should be branch icon on a book
+  test -z "$theme_icon_VCS_BRANCH_DETACHED" 	; and set -g theme_icon_VCS_BRANCH_DETACHED 	\U27A6" "	# ➦
+  test -z "$theme_icon_VCS_GIT"             	; and set -g theme_icon_VCS_GIT             	\UF00A" "	#  from Octicons
+  test -z "$theme_icon_VCS_HG"              	; and set -g theme_icon_VCS_HG              	\UF0DD" "	# Got cut off from Octicons on patching
+  test -z "$theme_icon_VCS_CLEAN"           	; and set -g theme_icon_VCS_CLEAN           	\UF03A   	# 
+  test -z "$theme_icon_VCS_PUSH"            	; and set -g theme_icon_VCS_PUSH            	\UF005" "	# 
+  test -z "$theme_icon_VCS_DIRTY"           	; and set -g theme_icon_VCS_DIRTY           	±        	#
+  test -z "$theme_icon_ARROW_UP"            	; and set -g theme_icon_ARROW_UP            	\UF03D"" 	#  ↑
+  test -z "$theme_icon_ARROW_DOWN"          	; and set -g theme_icon_ARROW_DOWN          	\UF03F"" 	#  ↓
+  test -z "$theme_icon_OK"                  	; and set -g theme_icon_OK                  	\UF03A   	# 
+  test -z "$theme_icon_FAIL"                	; and set -g theme_icon_FAIL                	\UF081   	# 
+  test -z "$theme_icon_STAR"                	; and set -g theme_icon_STAR                	\UF02A   	# 
+  test -z "$theme_icon_JOBS"                	; and set -g theme_icon_JOBS                	\U2699" "	# ⚙
+  test -z "$theme_icon_VIM"                 	; and set -g theme_icon_VIM                 	\UE7C5" "	# 
+  test -z "$theme_icon_LOCK"                	; and set -g theme_icon_LOCK                	        	#
 end
 
 set -g CMD_DURATION 0
