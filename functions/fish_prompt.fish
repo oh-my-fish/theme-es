@@ -59,6 +59,8 @@ function _set_theme_vars -d 'Set default values to theme variables unless alread
     end
   end
   test -z "$theme_notify_duration"	; and set -g theme_notify_duration	10000
+
+  set -g ORANGE	FF8C00	# FF8C00 dark orange, FFA500 orange, another one fa0 o
 end
 
 function _cmd_duration -d 'Displays the elapsed time of last command and show notification for long lasting commands'
@@ -358,7 +360,6 @@ end
 
 function _set_theme_icons
   #echo A quick test of glyph output: \Uf00a \ue709 \ue791 \ue739 \uF0DD \UF020 \UF01F \UF07B \UF015 \UF00C \UF00B \UF06B \UF06C \UF06E \UF091 \UF02C \UF026 \UF06D \UF0CF \UF03A \UF005 \UF03D \UF081 \UF02A \UE606 \UE73C
-  set -g ORANGE                   	FF8C00   	# FF8C00 dark orange, FFA500 orange, another one fa0 o
   set -g ICON_NODE                	\UE718" "	#  from Devicons or ⬢
   set -g ICON_RUBY                	\UE791" "	# \UE791 from Devicons; \UF047; \UE739; 💎
   set -g ICON_PYTHON              	\UE606" "	# \UE606; \UE73C
