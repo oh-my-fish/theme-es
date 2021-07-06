@@ -382,7 +382,7 @@ function _set_theme_icons
   set -g ICON_VCS_REMOTE_BRANCH   	\UE804" "	#  not displayed, should be branch icon on a book
   set -g ICON_VCS_DETACHED_BRANCH 	\U27A6" "	# ➦
   set -g ICON_VCS_GIT             	\UF00A" "	#  from Octicons
-  set -g ICON_VCS_HG              	\F0DD" " 	# Got cut off from Octicons on patching
+  set -g ICON_VCS_HG              	\UF0DD" "	# Got cut off from Octicons on patching
   set -g ICON_VCS_CLEAN           	\UF03A   	# 
   set -g ICON_VCS_PUSH            	\UF005" "	# 
   set -g ICON_VCS_DIRTY           	±        	#
