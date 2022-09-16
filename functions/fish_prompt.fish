@@ -169,23 +169,23 @@ end
 function _git_status -d 'Check git status'
   set -l git_status (command git status --porcelain 2> /dev/null | cut -c 1-2)
   set -l ahead (_git_ahead); echo -n $ahead                                    #show # of commits ahead/behind
-  if [ (echo -sn $git_status\n | egrep -c "[ACDMT][ MT]|[ACMT]D") -gt 0 ]      #added
+  if [ (echo -sn $git_status\n | grep -E -c "[ACDMT][ MT]|[ACMT]D") -gt 0 ]      #added
     echo -n (_col green)$ICON_VCS_STAGED
   end
   #set -l staged  (command git diff --cached --no-ext-diff --quiet --exit-code; or echo -n '~')      #was '~'
-  if [ (echo -sn $git_status\n | egrep -c "[ ACMRT]D") -gt 0 ]                  #deleted
+  if [ (echo -sn $git_status\n | grep -E -c "[ ACMRT]D") -gt 0 ]                  #deleted
     echo -n (_col red)$ICON_VCS_DELETED
   end
-  if [ (echo -sn $git_status\n | egrep -c ".[MT]") -gt 0 ]                      #modified
+  if [ (echo -sn $git_status\n | grep -E -c ".[MT]") -gt 0 ]                      #modified
     echo -n (_col $ORANGE)$ICON_VCS_MODIFIED
   end
-  if [ (echo -sn $git_status\n | egrep -c "R.") -gt 0 ]                         #renamed
+  if [ (echo -sn $git_status\n | grep -E -c "R.") -gt 0 ]                         #renamed
     echo -n (_col purple)$ICON_VCS_RENAME
   end
-  if [ (echo -sn $git_status\n | egrep -c "AA|DD|U.|.U") -gt 0 ]                #unmerged
+  if [ (echo -sn $git_status\n | grep -E -c "AA|DD|U.|.U") -gt 0 ]                #unmerged
     echo -n (_col brred)$ICON_VCS_UNMERGED(_col_res)
   end
-  if [ (echo -sn $git_status\n | egrep -c "\?\?") -gt 0 ]                       #untracked (new) files
+  if [ (echo -sn $git_status\n | grep -E -c "\?\?") -gt 0 ]                       #untracked (new) files
     echo -n (_col brcyan)$ICON_VCS_UNTRACKED
   end
   if test (command git rev-parse --verify --quiet refs/stash >/dev/null)        #stashed (was '$')
