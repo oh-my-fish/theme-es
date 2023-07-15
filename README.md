@@ -93,23 +93,23 @@ set -g theme_es_icon_LOCK                	        	#
 
 ### __Git folder__
 <p align="center">
-<img src="https://github.com/oh-my-fish/theme-es/blob/master/Fish%20Prompt%20Git-es.png?raw=true">
+<img src="../img/Fish%20Prompt%20Git-es.png?raw=true">
 </p>
 
 ### __Normal folder (no Git)__
 <p align="center">
-<img src="https://github.com/oh-my-fish/theme-es/blob/master/Fish%20Prompt%20NoGit-es.png?raw=true">
+<img src="../img/Fish%20Prompt%20NoGit-es.png?raw=true">
 </p>
 
 ### __Normal read-only folder (no Git)__
 <p align="left">
-<img src="https://github.com/oh-my-fish/theme-es/blob/master/Fish%20Prompt%20NoGit%20Read-only-es.png?raw=true" width="280">
+<img src="../img/Fish%20Prompt%20NoGit%20Read-only-es.png?raw=true" width="280">
 </p>
 
 <details>
   <summary>Icons</summary>
 
-  ![Icons](./Icons.png)
+  ![Icons](../img/Icons.png?raw=true)
 
 </details>
 
