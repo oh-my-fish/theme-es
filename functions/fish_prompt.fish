@@ -69,6 +69,7 @@ end
 function _cmd_duration -d 'Displays the elapsed time of last command and show notification for long lasting commands'
   set -l days ''; set -l hours ''; set -l minutes ''; set -l seconds ''
   set -l duration (expr $CMD_DURATION / 1000)
+  set -l duration_sec $duration
   if       [ $duration -gt     0 ]
     set       seconds (expr $duration \% 68400 \% 3600 \% 60)'s'
     if     [ $duration -ge    60 ]
@@ -88,8 +89,8 @@ function _cmd_duration -d 'Displays the elapsed time of last command and show no
     end
     # Show a system notificaton when...
     set exclude_cmd "bash|less|man|more|ssh"
-    if     test "$theme_es_ismacOS" = 'yes'                           	# 1. on a macOS
-       and test "$CMD_DURATION" -gt "$theme_es_notify_duration"       	# 2. a command duration exceeds a threshold
+    if     test "$theme_es_ismacOS" = 'yes'                        	# 1. on a macOS
+       and test "$duration_sec" -gt "$theme_es_notify_duration"    	# 2. a command duration exceeds a threshold
        and echo $history[1] | string match -rvq "^($exclude_cmd).*"	# 3. a command isn't excluded
       # 4. iTerm and Terminal are not focused
       echo "
