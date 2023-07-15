@@ -106,6 +106,13 @@ set -g theme_es_icon_LOCK                	        	#
 <img src="https://github.com/oh-my-fish/theme-es/blob/master/Fish%20Prompt%20NoGit%20Read-only-es.png?raw=true" width="280">
 </p>
 
+<details>
+  <summary>Icons</summary>
+
+  ![Icons](./Icons.png)
+
+</details>
+
 ## License
 
 [MIT][mit] © [eugenesvk][author] et [al][contributors]
