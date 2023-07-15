@@ -33,8 +33,10 @@ $ omf install es
 ```fish
 #      Variable                  	Default	  Option 	Prompt	Description
 set -g theme_es_show_symbols     	'yes'  	# no     	  ←   	Show pre-path symbols, e.g. read-only
+set -g theme_es_extra_space      	''     	# ' '    	  ←   	Add an extra symbol before each icon (e.g., an extra space)
 set -g theme_es_verbose_git_ahead	'yes'  	# no     	  ←   	Print the ahead/behind state for the current branch	(52 instead of ⇕)
 set -g theme_es_show_git_count   	'no'   	# yes    	  ←   	Show git count
+set -g theme_es_spacer_count     	''     	# ' '    	  ←   	Add extra symbol before each count (e.g., an extra space)
 set -g theme_es_git_sha          	'short'	# long no	  →   	Show git sha (short/long)
 set -g theme_es_show_user        	'no'   	# yes    	  →   	Show username
 set -g theme_es_show_hostname    	'yes'  	# no     	  →   	Show hostname on SSH connections
