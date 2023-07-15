@@ -16,7 +16,7 @@ $ omf install es
 ```
 
 ## Requirements
-* Powerline-patched font
+* A font patched with extra glyphs from [Font Awesome][font-awesome], [Devicons][font-devicons] and [Octicons ][font-octicons] (see the [__Nerd Fonts__](https://github.com/ryanoasis/nerd-fonts) project for more details)
 
 ## Features
 
@@ -54,3 +54,10 @@ $ omf install es
 [license-badge]:     	https://img.shields.io/badge/license-MIT-007EC7.svg?style=flat-square
 [fish-version-badge]:	https://img.shields.io/badge/fish-v3.0.0-007EC7.svg?style=flat-square
 [omf-badge]:         	https://img.shields.io/badge/Oh%20My%20Fish-Framework-007EC7.svg?style=flat-square
+
+[font-awesome]:                          	https://github.com/FortAwesome/Font-Awesome
+[font-devicons]:                         	https://vorillaz.github.io/devicons/
+[font-octicons]:                         	https://github.com/primer/octicons
+[font-material-design-icons]:            	https://github.com/Templarian/MaterialDesign
+[font-weather]:                          	https://github.com/erikflowers/weather-icons
+[font-ryanoasis-powerline-extra-symbols]:	https://github.com/ryanoasis/powerline-extra-symbols
