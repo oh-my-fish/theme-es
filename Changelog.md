@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file
 
-[unreleased]: https://github.com/oh-my-fish/theme-es/compare/0.1.0...HEAD
+[unreleased]: https://github.com/oh-my-fish/theme-es/compare/0.5.0...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
     <!-- + :sparkles:  -->
@@ -22,6 +22,8 @@ All notable changes to this project will be documented in this file
     <!-- + :lock:  -->
     <!-- vulnerabilities -->
 
+[0.5.0]: https://github.com/oh-my-fish/theme-es/releases/tag/0.5.0
+## [0.5.0]
   - __Added__
     + :sparkles: all theme variables (including icons) customization
     + option to disable Node/Python/Ruby version checks via config
@@ -32,7 +34,4 @@ All notable changes to this project will be documented in this file
     + replace `grep` dependency with the builtin `string`
     + refactor functions to display git prompt sha
   - __Fixed__
-    + erros on missing local Node/Python/Ruby versions
-
-[0.1.0]: https://github.com/oh-my-fish/theme-es/releases/tag/0.1.0
-## [0.1.0]
+    + errors on missing local Node/Python/Ruby versions
