@@ -44,6 +44,8 @@ end
 function _set_theme_vars -d 'Set default values to theme variables unless already set in user config'
   # Global variables that affect how left and right prompts look like
   test -z "$theme_es_show_symbols"     	; and set -g theme_es_show_symbols     	'yes'  	# [yes] no
+  test -z "$theme_es_extra_space"      	; and set -g theme_es_extra_space      	''     	# [''] ' '
+  test -z "$theme_es_spacer_count"     	; and set -g theme_es_spacer_count     	''     	# [''] ' '
   test -z "$theme_es_verbose_git_ahead"	; and set -g theme_es_verbose_git_ahead	'yes'  	# [yes] no
   test -z "$theme_es_git_sha"          	; and set -g theme_es_git_sha          	'short'	# [short] long no
   test -z "$theme_es_show_user"        	; and set -g theme_es_show_user        	'no'   	# [no] yes
@@ -188,37 +190,37 @@ function _git_status -d 'Check git status'
   if test $count_staged       -gt 0
     echo -ns (_col green)  $theme_es_icon_VCS_STAGED; set staged 'y'
     if test \( "$theme_es_show_git_count" = 'yes' \) -a \( $count_staged    -gt 1 \)
-      echo -ns $count_staged
+      echo -ns "$theme_es_spacer_count""$count_staged"
     else; echo -ns ' '; end
   end
   if test $count_deleted     -gt 0
     echo -ns (_col red)    $theme_es_icon_VCS_DELETED
     if test \( "$theme_es_show_git_count" = 'yes' \) -a \( $count_deleted  -gt 1 \)
-      echo -ns $count_deleted
+      echo -ns "$theme_es_spacer_count""$count_deleted"
     else; echo -ns ' '; end
   end
   if test $count_modified    -gt 0
     echo -ns (_col $ORANGE)$theme_es_icon_VCS_MODIFIED
     if test \( "$theme_es_show_git_count" = 'yes' \) -a \( $count_modified -gt 1 \)
-      echo -ns $count_modified
+      echo -ns "$theme_es_spacer_count""$count_modified"
     else; echo -ns ' '; end
   end
   if test $count_renamed     -gt 0
     echo -ns (_col purple) $theme_es_icon_VCS_RENAMED
     if test \( "$theme_es_show_git_count" = 'yes' \) -a \( $count_renamed  -gt 1 \)
-      echo -ns $count_renamed
+      echo -ns "$theme_es_spacer_count""$count_renamed"
     else; echo -ns ' '; end
   end
   if test $count_unmerged    -gt 0
     echo -ns (_col brred)  $theme_es_icon_VCS_UNMERGED
     if test \( "$theme_es_show_git_count" = 'yes' \) -a \( $count_unmerged -gt 1 \)
-      echo -ns $count_unmerged
+      echo -ns "$theme_es_spacer_count""$count_unmerged"
     else; echo -ns ' '; end
   end
   if test $count_untracked   -gt 0
     echo -ns (_col brcyan) $theme_es_icon_VCS_UNTRACKED
     if test \( "$theme_es_show_git_count" = 'yes' \) -a \( $count_untracked -gt 1 \)
-      echo -ns $count_untracked
+      echo -ns "$theme_es_spacer_count""$count_untracked"
     else; echo -ns ' '; end
   end
   if test (command git rev-parse --verify --quiet refs/stash >/dev/null)                # stashed (was '$')
@@ -363,41 +365,42 @@ function _is_python_local -d "Check if local python version is set via .python-v
 end
 
 function _set_theme_icons
+  set s "$theme_es_extra_space"
   #echo A quick test of glyph output: \Uf00a \ue709 \ue791 \ue739 \uF0DD \UF020 \UF01F \UF07B \UF015 \UF00C \UF00B \UF06B \UF06C \UF06E \UF091 \UF02C \UF026 \UF06D \UF0CF \UF03A \UF005 \UF03D \UF081 \UF02A \UE606 \UE73C
-  test -z "$theme_es_icon_NODE"                	; and set -g theme_es_icon_NODE                	\UE718" "	#  from Devicons or ⬢
-  test -z "$theme_es_icon_RUBY"                	; and set -g theme_es_icon_RUBY                	\UE791" "	# \UE791 from Devicons; \UF047; \UE739; 💎
-  test -z "$theme_es_icon_PYTHON"              	; and set -g theme_es_icon_PYTHON              	\UE606" "	# \UE606; \UE73C
-  test -z "$theme_es_icon_PERL"                	; and set -g theme_es_icon_PERL                	\UE606" "	# \UE606; \UE73C
-  test -z "$theme_es_icon_TEST"                	; and set -g theme_es_icon_TEST                	\UF091   	# 
-  test -z "$theme_es_icon_VCS_STAGED"          	; and set -g theme_es_icon_VCS_STAGED          	\UF06B   	#  (added) →
-  test -z "$theme_es_icon_VCS_DELETED"         	; and set -g theme_es_icon_VCS_DELETED         	\UF06C   	# 
-  test -z "$theme_es_icon_VCS_MODIFIED"        	; and set -g theme_es_icon_VCS_MODIFIED        	\UF06D   	# 
-  test -z "$theme_es_icon_VCS_RENAMED"         	; and set -g theme_es_icon_VCS_RENAMED         	\UF06E   	# 
-  test -z "$theme_es_icon_VCS_UNMERGED"        	; and set -g theme_es_icon_VCS_UNMERGED        	\UF026   	#    #═: there are unmerged commits
-  test -z "$theme_es_icon_VCS_UNTRACKED"       	; and set -g theme_es_icon_VCS_UNTRACKED       	\UF02C   	#    #●: there are untracked (new) files
-  test -z "$theme_es_icon_VCS_DIFF"            	; and set -g theme_es_icon_VCS_DIFF            	\UF06B" "	# 
-  test -z "$theme_es_icon_VCS_STASH"           	; and set -g theme_es_icon_VCS_STASH           	\UF0CF" "	#      #✭: there are stashed commits
-  test -z "$theme_es_icon_VCS_INCOMING_CHANGES"	; and set -g theme_es_icon_VCS_INCOMING_CHANGES	\UF00B" "	#  or \UE1EB or \UE131
-  test -z "$theme_es_icon_VCS_OUTGOING_CHANGES"	; and set -g theme_es_icon_VCS_OUTGOING_CHANGES	\UF00C" "	#  or \UE1EC or 
-  test -z "$theme_es_icon_VCS_TAG"             	; and set -g theme_es_icon_VCS_TAG             	\UF015" "	# 
-  test -z "$theme_es_icon_VCS_BOOKMARK"        	; and set -g theme_es_icon_VCS_BOOKMARK        	\UF07B" "	# 
-  test -z "$theme_es_icon_VCS_COMMIT"          	; and set -g theme_es_icon_VCS_COMMIT          	\UF01F" "	# 
-  test -z "$theme_es_icon_VCS_BRANCH"          	; and set -g theme_es_icon_VCS_BRANCH          	\UE0A0   	# \UE0A0 or \UF020
-  test -z "$theme_es_icon_VCS_BRANCH_REMOTE"   	; and set -g theme_es_icon_VCS_BRANCH_REMOTE   	\UE804" "	#  not displayed, should be branch icon on a book
-  test -z "$theme_es_icon_VCS_BRANCH_DETACHED" 	; and set -g theme_es_icon_VCS_BRANCH_DETACHED 	\U27A6" "	# ➦
-  test -z "$theme_es_icon_VCS_GIT"             	; and set -g theme_es_icon_VCS_GIT             	\UF00A" "	#  from Octicons
-  test -z "$theme_es_icon_VCS_HG"              	; and set -g theme_es_icon_VCS_HG              	\UF0DD" "	# Got cut off from Octicons on patching
-  test -z "$theme_es_icon_VCS_CLEAN"           	; and set -g theme_es_icon_VCS_CLEAN           	\UF03A   	# 
-  test -z "$theme_es_icon_VCS_PUSH"            	; and set -g theme_es_icon_VCS_PUSH            	\UF005" "	# 
-  test -z "$theme_es_icon_VCS_DIRTY"           	; and set -g theme_es_icon_VCS_DIRTY           	±        	#
-  test -z "$theme_es_icon_ARROW_UP"            	; and set -g theme_es_icon_ARROW_UP            	\UF03D"" 	#  ↑
-  test -z "$theme_es_icon_ARROW_DOWN"          	; and set -g theme_es_icon_ARROW_DOWN          	\UF03F"" 	#  ↓
-  test -z "$theme_es_icon_OK"                  	; and set -g theme_es_icon_OK                  	\UF03A   	# 
-  test -z "$theme_es_icon_FAIL"                	; and set -g theme_es_icon_FAIL                	\UF081   	# 
-  test -z "$theme_es_icon_STAR"                	; and set -g theme_es_icon_STAR                	\UF02A   	# 
-  test -z "$theme_es_icon_JOBS"                	; and set -g theme_es_icon_JOBS                	\U2699" "	# ⚙
-  test -z "$theme_es_icon_VIM"                 	; and set -g theme_es_icon_VIM                 	\UE7C5" "	# 
-  test -z "$theme_es_icon_LOCK"                	; and set -g theme_es_icon_LOCK                	        	#
+  test -z "$theme_es_icon_NODE"                	; and set -g theme_es_icon_NODE                	"$s"\UE718" "	#  from Devicons or ⬢
+  test -z "$theme_es_icon_RUBY"                	; and set -g theme_es_icon_RUBY                	"$s"\UE791" "	# \UE791 from Devicons; \UF047; \UE739; 💎
+  test -z "$theme_es_icon_PYTHON"              	; and set -g theme_es_icon_PYTHON              	"$s"\UE606" "	# \UE606; \UE73C
+  test -z "$theme_es_icon_PERL"                	; and set -g theme_es_icon_PERL                	"$s"\UE606" "	# \UE606; \UE73C
+  test -z "$theme_es_icon_TEST"                	; and set -g theme_es_icon_TEST                	"$s"\UF091   	# 
+  test -z "$theme_es_icon_VCS_STAGED"          	; and set -g theme_es_icon_VCS_STAGED          	"$s"\UF06B   	#  (added) →
+  test -z "$theme_es_icon_VCS_DELETED"         	; and set -g theme_es_icon_VCS_DELETED         	"$s"\UF06C   	# 
+  test -z "$theme_es_icon_VCS_MODIFIED"        	; and set -g theme_es_icon_VCS_MODIFIED        	"$s"\UF06D   	# 
+  test -z "$theme_es_icon_VCS_RENAMED"         	; and set -g theme_es_icon_VCS_RENAMED         	"$s"\UF06E   	# 
+  test -z "$theme_es_icon_VCS_UNMERGED"        	; and set -g theme_es_icon_VCS_UNMERGED        	"$s"\UF026   	#    #═: there are unmerged commits
+  test -z "$theme_es_icon_VCS_UNTRACKED"       	; and set -g theme_es_icon_VCS_UNTRACKED       	"$s"\UF02C   	#    #●: there are untracked (new) files
+  test -z "$theme_es_icon_VCS_DIFF"            	; and set -g theme_es_icon_VCS_DIFF            	"$s"\UF06B" "	# 
+  test -z "$theme_es_icon_VCS_STASH"           	; and set -g theme_es_icon_VCS_STASH           	"$s"\UF0CF" "	#      #✭: there are stashed commits
+  test -z "$theme_es_icon_VCS_INCOMING_CHANGES"	; and set -g theme_es_icon_VCS_INCOMING_CHANGES	"$s"\UF00B" "	#  or \UE1EB or \UE131
+  test -z "$theme_es_icon_VCS_OUTGOING_CHANGES"	; and set -g theme_es_icon_VCS_OUTGOING_CHANGES	"$s"\UF00C" "	#  or \UE1EC or 
+  test -z "$theme_es_icon_VCS_TAG"             	; and set -g theme_es_icon_VCS_TAG             	"$s"\UF015" "	# 
+  test -z "$theme_es_icon_VCS_BOOKMARK"        	; and set -g theme_es_icon_VCS_BOOKMARK        	"$s"\UF07B" "	# 
+  test -z "$theme_es_icon_VCS_COMMIT"          	; and set -g theme_es_icon_VCS_COMMIT          	"$s"\UF01F" "	# 
+  test -z "$theme_es_icon_VCS_BRANCH"          	; and set -g theme_es_icon_VCS_BRANCH          	"$s"\UE0A0   	# \UE0A0 or \UF020
+  test -z "$theme_es_icon_VCS_BRANCH_REMOTE"   	; and set -g theme_es_icon_VCS_BRANCH_REMOTE   	"$s"\UE804" "	#  not displayed, should be branch icon on a book
+  test -z "$theme_es_icon_VCS_BRANCH_DETACHED" 	; and set -g theme_es_icon_VCS_BRANCH_DETACHED 	"$s"\U27A6" "	# ➦
+  test -z "$theme_es_icon_VCS_GIT"             	; and set -g theme_es_icon_VCS_GIT             	"$s"\UF00A" "	#  from Octicons
+  test -z "$theme_es_icon_VCS_HG"              	; and set -g theme_es_icon_VCS_HG              	"$s"\UF0DD" "	# Got cut off from Octicons on patching
+  test -z "$theme_es_icon_VCS_CLEAN"           	; and set -g theme_es_icon_VCS_CLEAN           	"$s"\UF03A   	# 
+  test -z "$theme_es_icon_VCS_PUSH"            	; and set -g theme_es_icon_VCS_PUSH            	"$s"\UF005" "	# 
+  test -z "$theme_es_icon_VCS_DIRTY"           	; and set -g theme_es_icon_VCS_DIRTY           	"$s""±"      	#
+  test -z "$theme_es_icon_ARROW_UP"            	; and set -g theme_es_icon_ARROW_UP            	"$s"\UF03D   	#  ↑
+  test -z "$theme_es_icon_ARROW_DOWN"          	; and set -g theme_es_icon_ARROW_DOWN          	"$s"\UF03F   	#  ↓
+  test -z "$theme_es_icon_OK"                  	; and set -g theme_es_icon_OK                  	"$s"\UF03A   	# 
+  test -z "$theme_es_icon_FAIL"                	; and set -g theme_es_icon_FAIL                	"$s"\UF081   	# 
+  test -z "$theme_es_icon_STAR"                	; and set -g theme_es_icon_STAR                	"$s"\UF02A   	# 
+  test -z "$theme_es_icon_JOBS"                	; and set -g theme_es_icon_JOBS                	"$s"\U2699" "	# ⚙
+  test -z "$theme_es_icon_VIM"                 	; and set -g theme_es_icon_VIM                 	"$s"\UE7C5" "	# 
+  test -z "$theme_es_icon_LOCK"                	; and set -g theme_es_icon_LOCK                	"$s"""      	#
 end
 
 set -g CMD_DURATION 0
