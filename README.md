@@ -33,7 +33,7 @@ $ omf install es
 ```fish
 #      Variable                  	Default	  Option 	Prompt	Description
 set -g theme_es_show_symbols     	'yes'  	# no     	  ←   	Show pre-path symbols, e.g. read-only
-set -g theme_es_verbose_git_ahead	'yes'  	# no     	      	
+set -g theme_es_verbose_git_ahead	'yes'  	# no     	  ←   	Print the ahead/behind state for the current branch	(52 instead of ⇕)
 set -g theme_es_show_git_count   	'no'   	# yes    	  ←   	Show git count
 set -g theme_es_git_sha          	'short'	# long no	  →   	Show git sha (short/long)
 set -g theme_es_show_user        	'no'   	# yes    	  →   	Show username
@@ -43,6 +43,49 @@ set -g theme_es_show_python_v    	'yes'  	# no     	  →   	Show Python vers
 set -g theme_es_show_ruby_v      	'yes'  	# no     	  →   	Show Ruby prompt @ gemset
 set -g theme_es_notify_duration  	10     	#        	      	Notify if command runs longer than this time (seconds)
 ```
+
+* You can also override every single icon  by setting the following variables in your `~/.config/fish/config.fish`:
+<details>
+  <summary>List of icon variable names and default values</summary>
+
+```fish
+#echo A quick test of glyph output: \Uf00a \ue709 \ue791 \ue739 \uF0DD \UF020 \UF01F \UF07B \UF015 \UF00C \UF00B \UF06B \UF06C \UF06E \UF091 \UF02C \UF026 \UF06D \UF0CF \UF03A \UF005 \UF03D \UF081 \UF02A \UE606 \UE73C
+set -g theme_es_icon_NODE                	\UE718" "	#  from Devicons or ⬢
+set -g theme_es_icon_RUBY                	\UE791" "	# \UE791 from Devicons; \UF047; \UE739; 💎
+set -g theme_es_icon_PYTHON              	\UE606" "	# \UE606; \UE73C
+set -g theme_es_icon_PERL                	\UE606" "	# \UE606; \UE73C
+set -g theme_es_icon_TEST                	\UF091   	# 
+set -g theme_es_icon_VCS_STAGED          	\UF06B   	#  (added) →
+set -g theme_es_icon_VCS_DELETED         	\UF06C   	# 
+set -g theme_es_icon_VCS_MODIFIED        	\UF06D   	# 
+set -g theme_es_icon_VCS_RENAMED         	\UF06E   	# 
+set -g theme_es_icon_VCS_UNMERGED        	\UF026   	#    #═: there are unmerged commits
+set -g theme_es_icon_VCS_UNTRACKED       	\UF02C   	#    #●: there are untracked (new) files
+set -g theme_es_icon_VCS_DIFF            	\UF06B" "	# 
+set -g theme_es_icon_VCS_STASH           	\UF0CF" "	#      #✭: there are stashed commits
+set -g theme_es_icon_VCS_INCOMING_CHANGES	\UF00B" "	#  or \UE1EB or \UE131
+set -g theme_es_icon_VCS_OUTGOING_CHANGES	\UF00C" "	#  or \UE1EC or 
+set -g theme_es_icon_VCS_TAG             	\UF015" "	# 
+set -g theme_es_icon_VCS_BOOKMARK        	\UF07B" "	# 
+set -g theme_es_icon_VCS_COMMIT          	\UF01F" "	# 
+set -g theme_es_icon_VCS_BRANCH          	\UE0A0   	# \UE0A0 or \UF020
+set -g theme_es_icon_VCS_BRANCH_REMOTE   	\UE804" "	#  not displayed, should be branch icon on a book
+set -g theme_es_icon_VCS_BRANCH_DETACHED 	\U27A6" "	# ➦
+set -g theme_es_icon_VCS_GIT             	\UF00A" "	#  from Octicons
+set -g theme_es_icon_VCS_HG              	\UF0DD" "	# Got cut off from Octicons on patching
+set -g theme_es_icon_VCS_CLEAN           	\UF03A   	# 
+set -g theme_es_icon_VCS_PUSH            	\UF005" "	# 
+set -g theme_es_icon_VCS_DIRTY           	±        	#
+set -g theme_es_icon_ARROW_UP            	\UF03D"" 	#  ↑
+set -g theme_es_icon_ARROW_DOWN          	\UF03F"" 	#  ↓
+set -g theme_es_icon_OK                  	\UF03A   	# 
+set -g theme_es_icon_FAIL                	\UF081   	# 
+set -g theme_es_icon_STAR                	\UF02A   	# 
+set -g theme_es_icon_JOBS                	\U2699" "	# ⚙
+set -g theme_es_icon_VIM                 	\UE7C5" "	# 
+set -g theme_es_icon_LOCK                	        	#
+```
+</details>
 
 ## Screenshots
 
