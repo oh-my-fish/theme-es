@@ -22,5 +22,17 @@ All notable changes to this project will be documented in this file
     <!-- + :lock:  -->
     <!-- vulnerabilities -->
 
+  - __Added__
+    + :sparkles: all theme variables (including icons) customization
+    + option to disable Node/Python/Ruby version checks via config
+    + option `theme_show_git_count` to add the count of the number of files after each git status (e.g. staged5 deleted2)
+  - __Changed__
+    + duration var units to seconds
+    + add an explicit theme name to user vars to avoid potential conflict
+    + replace `grep` dependency with the builtin `string`
+    + refactor functions to display git prompt sha
+  - __Fixed__
+    + erros on missing local Node/Python/Ruby versions
+
 [0.1.0]: https://github.com/oh-my-fish/theme-es/releases/tag/0.1.0
 ## [0.1.0]
