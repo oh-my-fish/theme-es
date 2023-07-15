@@ -22,6 +22,10 @@ All notable changes to this project will be documented in this file
   <!--   + :lock:  -->
   <!--   vulnerabilities -->
 
+  - __Added__
+    + :sparkles: `theme_es_extra_space` option to add extra space before icons
+    + :sparkles: `theme_es_spacer_count` option to add extra space before count
+
 [0.5.0]: https://github.com/oh-my-fish/theme-es/releases/tag/0.5.0
 ## [0.5.0]
   - __Added__
