@@ -30,15 +30,19 @@ $ omf install es
 
 ## Configuration
 * Set the following variables in your `~/.config/fish/config.fish` to define how this theme looks:
-__    Command                                            'Default'    # Option (prompt) Description__
-<pre>
-set -g theme_es_show_symbols      'yes'     #      (left)   Show pre-path symbols, e.g. read-only
-set -g theme_es_verbose_git_ahead 'yes'     #
-set -g theme_es_show_git_sha      'short'   # long (right)  Show git sha (short/long)
-set -g theme_es_show_user         'no'      # yes  (right)  Show username
-set -g theme_es_show_hostname     'yes'     #      (right)  Show hostname on SSH connections
-set -g theme_es_notify_duration   10000     #               Time threshold (in ms) for a long command
-</pre>
+```fish
+#      Variable                  	Default	  Option 	Prompt	Description
+set -g theme_es_show_symbols     	'yes'  	# no     	  ←   	Show pre-path symbols, e.g. read-only
+set -g theme_es_verbose_git_ahead	'yes'  	# no     	      	
+set -g theme_es_show_git_count   	'no'   	# yes    	  ←   	Show git count
+set -g theme_es_git_sha          	'short'	# long no	  →   	Show git sha (short/long)
+set -g theme_es_show_user        	'no'   	# yes    	  →   	Show username
+set -g theme_es_show_hostname    	'yes'  	# no     	  →   	Show hostname on SSH connections
+set -g theme_es_show_node_v      	'yes'  	# no     	  →   	Show Node.js version
+set -g theme_es_show_python_v    	'yes'  	# no     	  →   	Show Python version
+set -g theme_es_show_ruby_v      	'yes'  	# no     	  →   	Show Ruby prompt @ gemset
+set -g theme_es_notify_duration  	10     	#        	      	Notify if command runs longer than this time (seconds)
+```
 
 ## Screenshots
 
