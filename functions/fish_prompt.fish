@@ -223,7 +223,7 @@ function _git_status -d 'Check git status'
       echo -ns "$theme_es_spacer_count""$count_untracked"
     else; echo -ns ' '; end
   end
-  if test (command git rev-parse --verify --quiet refs/stash >/dev/null)                # stashed (was '$')
+  if test (command git rev-parse --verify --quiet refs/stash)                # stashed (was '$')
     echo -ns (_col brred)$theme_es_icon_VCS_STASH
     set stashed 'y'
   end
