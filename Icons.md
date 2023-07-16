@@ -1,7 +1,7 @@
 theme_es_icon_NODE                	\UE718	 Devicons
 theme_es_icon_RUBY                	\UE791	 Devicons
 theme_es_icon_PYTHON              	\UE606	
-theme_es_icon_PERL                	\UE606	
+theme_es_icon_PERL                	\UE769	
 theme_es_icon_TEST                	\UF091		
 theme_es_icon_VCS_STAGED          	\UF06B	
 theme_es_icon_VCS_DELETED         	\UF06C		
